@@ -79,9 +79,6 @@ int position;  // Position of sell, which updated
 int score;  // Number of eaten apples
 int preTick; // Previous tick time
 char fat;  // Flag of setting fat cell
-int FPStime=0;
-int counter=0;
-int precounter=0;
 
 // Texts variables and constants
 TTF_Font* Font;
@@ -431,19 +428,7 @@ int main(int argv, char** args){
         }
         drawText( std::to_string(score), 20 , 15);  // Drawing text with score at screen
         
-		
-        //preTick = SDL_GetTicks();
-        if(SDL_GetTicks() - FPStime > 1000){
-            FPStime = SDL_GetTicks();
-            precounter = counter;
-            counter = 0;
-        }
-        counter+=1;
-        drawText( std::to_string( precounter ), SCREEN_WIDTH-80 , 15);  // Drawing text with score at screen
-        SDL_RenderPresent(app.renderer);  // Blitting textures on screen
-
-        // Delaying time to decrease CPU loading
-		//SDL_Delay(1000/FPS);
+		SDL_Delay(1000/FPS);  // Delaying time to decrease CPU loading
 	}
     // Exiting program and clearing all data
     unloadTextures();
