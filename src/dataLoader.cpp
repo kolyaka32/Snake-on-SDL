@@ -2,174 +2,262 @@
 #include "define.hpp"
 #include "structs.hpp"
 
+#include "zip.h"
+
 #include "init.hpp"
 #include "dataLoader.hpp"
 
-void dataLoader::expectCorrection(){
-    if(dataFile == NULL){
-        printf("Problems with loading data file.\n");
+// Arcieve local structs
+zip_t* archieve;  // Archieve with all data
+
+// Counters of loaded files
+static Uint8 loadedImages;
+static Uint8 loadedAnimations;
+static Uint8 loadedMusics;
+static Uint8 loadedSounds;
+
+// Function of open archieve and setting base password
+zip_t* openArchieve(std::string archieveName){
+    // Open archieve with need name
+    archieve = zip_open(archieveName.std::string::c_str(), ZIP_RDONLY, NULL);
+
+    #if PASSWORD
+    zip_set_default_password(archieve, PASSWORD);
+    #endif
+
+    // Returning archieve for checking correction
+    return archieve;
+};
+
+// Function of getting data of archieve file
+static inline SDL_RWops* dataFromArchieve(const char* name){
+    // Openning need file
+    zip_file_t* file = zip_fopen_encrypted(archieve, name, 0, PASSWORD);
+    
+    zip_stat_t st;
+	zip_stat(archieve, name, 0, &st);  // Getting data of current file
+    // Checking correction of file
+    if(st.size == 0){  
+        return NULL;
+    }
+
+    // Copping data to buffer
+    char* buffer = (char*)malloc(sizeof(char*)*st.size);
+    zip_fread(file, buffer, st.size);
+    zip_fclose(file);
+    // Creating SDL-based structure with data
+    SDL_RWops* tempRW = SDL_RWFromMem(buffer, st.size);
+
+    // Returning created data structure
+    return tempRW;
+};
+
+// Functions of loading objects
+// Function of loading game icone
+static unsigned loadIcone(const char* name){
+    // Getting icone data
+    SDL_RWops* tempRW = dataFromArchieve(name);
+
+    // Setting window icone
+    SDL_Surface* iconeImage = IMG_LoadICO_RW(tempRW);
+    if(iconeImage == NULL){  // Checking creating image
+        return 0;  // Returning 0 as error with loading
+    }
+    SDL_RWclose(tempRW);
+    SDL_SetWindowIcon(app.window, iconeImage);
+    SDL_FreeSurface(iconeImage);
+    return ICO_count;  // Returning correction of loading
+};
+
+// Functions of loading selected image file
+static void loadPicture(const char* name, IMG_names number){
+    // Getting selected picture data
+    SDL_RWops* tempRW = dataFromArchieve(name);
+    // Creating texture from data
+    Textures[number] = SDL_CreateTextureFromSurface(app.renderer, IMG_LoadPNG_RW(tempRW));
+    SDL_RWclose(tempRW);
+
+    // Checking correction of loaded file
+    if(Textures[number] != NULL){
+        loadedImages++;
+    };
+};
+
+// Function of loading selected GIF animation
+static void loadAnimation(const char* name, ANI_names number){
+    // Getting selected animation data
+    SDL_RWops* tempRW = dataFromArchieve(name);
+    // Creating animation from data
+    Animations[number] = IMG_LoadAnimation_RW(tempRW, 0);
+    SDL_RWclose(tempRW);
+
+    // Checking correction of loaded file
+    if(Animations[number] != NULL){
+        loadedAnimations++;
+    };
+};
+
+// Function of loading selected music file
+static void loadMusic(const char* name, MUS_names number){
+    // Getting selected music track data
+    SDL_RWops* tempRW = dataFromArchieve(name);
+    // Creating music track from data
+    Musics[number] = Mix_LoadMUSType_RW(tempRW, MUS_MP3, 0);
+    //Animations[number] = IMG_LoadAnimation_RW(tempRW, 1);
+    SDL_RWclose(tempRW);
+
+    // Checking correction of loaded file
+    if(Musics[number] != NULL){
+        loadedMusics++;
+    };
+};
+
+// Function of loading selected sound
+static void loadSound(const char* name, SND_names number){
+    // Getting selected sound data
+    SDL_RWops* tempRW = dataFromArchieve(name);
+    // Creating sound from data
+    Sounds[number] = Mix_LoadWAV_RW(tempRW, 0);
+    //Animations[number] = IMG_LoadAnimation_RW(tempRW, 1);
+    SDL_RWclose(tempRW);
+
+    // Checking correction of loaded file
+    if(Sounds[number] != NULL){
+        loadedSounds++;
+    };
+};
+
+// Function of loading font
+static unsigned loadFont(const char* name){
+    // Openning font file
+    zip_file_t* file = zip_fopen_encrypted(archieve, name, 0, PASSWORD);
+    
+    zip_stat_t st;
+	zip_stat(archieve, name, 0, &st);  // Getting data from file
+    // Checking correction of file
+    if(st.size == 0){  
+        return 0;
+    }
+
+    // Copping data to buffer
+    fontMemory = (Uint8*)malloc(sizeof(Uint8*) * st.size);
+    fontSize = st.size;
+    zip_fread(file, fontMemory, st.size);
+    zip_fclose(file);
+
+    // Checking correction
+    return FNT_count;
+};
+
+// Functions of loading objects from lists
+// Loading all images
+static unsigned loadAllImages(){
+    loadedImages = 0;  // Resseting counter
+    // Main menu structures
+    loadPicture("img/esc_butt.png", IMG_MENU_PAUSE);
+    loadPicture("img/shar_polzun.png", IMG_MENU_SCROLLER_BUTTON);
+    loadPicture("img/Poloska_pod_polzunom.png", IMG_MENU_SCROLLER_LINE);
+    // Flags in settings
+    loadPicture("img/Flag_USA.png", IMG_FLAG_USA);
+    loadPicture("img/Flag_RUS.png", IMG_FLAG_RUS);
+    loadPicture("img/Flag_RUS_IMP.png", IMG_FLAG_RUS_IMP);
+    loadPicture("img/Flag_BEL.png", IMG_FLAG_BEL);
+    // Game background
+    loadPicture("img/kletka_svet.png", IMG_BACK_LIGHT);
+    loadPicture("img/kletka_tyma.png", IMG_BACK_DARK);
+    loadPicture("img/none.png", IMG_BACK);
+    // Game sprites
+    // Eatable objects
+    loadPicture("img/Apple.png", IMG_APPLE);
+    loadPicture("img/Potato.png", IMG_POTATO);
+    // Snake pictures
+    loadPicture("img/Snake_head_turnL.png", IMG_HEAD_LEFT);
+    loadPicture("img/Snake_Head1.png", IMG_HEAD_STRAIGHT);
+    loadPicture("img/Snake_head_turnR.png", IMG_HEAD_RIGHT);
+    loadPicture("img/Snake_TurningLeft.png", IMG_BODY_LEFT);
+    loadPicture("img/Snake_torso.png", IMG_BODY_STRAIGHT);
+    loadPicture("img/Snake_TurningRight.png", IMG_BODY_RIGHT);
+    loadPicture("img/Snake_End.png", IMG_END);
+    loadPicture("img/Snake_TurningLeft_fat.png", IMG_BODY_LEFT_FAT);
+    loadPicture("img/Snake_Torso_fat.png", IMG_BODY_STRAIGHT_FAT);
+    loadPicture("img/Snake_TurningRight_fat.png", IMG_BODY_RIGHT_FAT);
+    loadPicture("img/Snake_End_fat.png", IMG_END_FAT);
+
+    // Returning numbers of loaded files
+    return loadedImages;
+};
+
+// Loading all animations
+static unsigned loadAllAnimations(){
+    loadedAnimations = 0;  // Resseting counter
+    //loadAnimation("ani/.gif", ANI_);
+
+    // Returning numbers of loaded files
+    return loadedAnimations;
+};
+
+// Loading all music tracks
+static unsigned loadAllMusic(){
+    loadedMusics = 0;  // Resseting counter
+    //loadMusic("mus/.mp3", MUS_);
+
+    // Returning numbers of loaded files
+    return loadedMusics;
+};
+
+// Loading all sounds
+static unsigned loadAllSounds(){
+    loadedSounds = 0;  // Resseting counter
+    //loadSound("snd/.wav", SND_);
+
+    // Returning numbers of loaded files
+    return loadedSounds;
+};
+
+void loadData(std::string fileName){
+    // Opening archieve
+    if(openArchieve(fileName) == NULL){
+        printf("Can't load arcieve");
         exit(ERR_FIL_OPN);
-    }
-    if(SDL_ReadU8(dataFile) != SEPARATOR){
-        printf("Problems with file separator.\n");
-        exit(ERR_FIL_SEP);
-    }
-    if(SDL_ReadU8(dataFile) != GAME_VERSION){
-        printf("Warning, that older version of data file than need.\n");
-    }
-    if(SDL_ReadU8(dataFile) != ICO_count){
-        printf("Wrong count of icones.\n");
+    }  
+
+    // Loading data from archieve
+    if(loadIcone("img/Game.ico") != ICO_count){
+        printf("Can't load game icone");
         exit(ERR_FIL_ICO);
     }
-    if(SDL_ReadU8(dataFile) != IMG_count){
-        printf("Wrong count of images.\n");
+    if(loadAllImages() != IMG_count){
+        printf("Wrong count of images");
         exit(ERR_FIL_IMG);
     }
-    if(SDL_ReadU8(dataFile) != ANI_count){
-        printf("Wrong count of animations.\n");
+    if(loadAllAnimations() != ANI_count){
+        printf("Wrong count of animations");
         exit(ERR_FIL_ANI);
     }
-    if(SDL_ReadU8(dataFile) != MUS_count){
-        printf("Wrong count of music.\n");
+    if(loadAllMusic() != MUS_count){
+        printf("Wrong count of music");
         exit(ERR_FIL_MUS);
     }
-    if(SDL_ReadU8(dataFile) != SND_count){
-        printf("Wrong count of sounds.\n");
+    if(loadAllSounds() != SND_count){
+        printf("Wrong count of sounds");
         exit(ERR_FIL_SND);
     }
-    if(SDL_ReadU8(dataFile) != FNT_count){
-        printf("Wrong count of fonts.\n");
+    if(loadFont("fnt/Arial.ttf") != FNT_count){
+        printf("Can't load font");
         exit(ERR_FIL_FNT);
     }
-    if(SDL_ReadU8(dataFile) != SEPARATOR){
-        printf("Problems with file separator.\n");
-        exit(ERR_FIL_SEP);
-    }
-};
 
-void dataLoader::loadIcone(){
-    Uint64 size = SDL_ReadLE32(dataFile);
-    int* buf = (int*)malloc(size);
-    SDL_RWread(dataFile, buf, size, 1);
-    SDL_RWops* tempRW = SDL_RWFromMem(buf, size);
-    SDL_Surface* icone = IMG_LoadICO_RW(tempRW);
-    if(icone == NULL){
-        printf("Something wrong with icones.\n");
-        exit(ERR_FIL_ICO);
-    }
-    SDL_SetWindowIcon(app.window, icone);
-    SDL_FreeSurface(icone);
-    SDL_RWclose(tempRW);
-    free(buf);
-};
-
-void dataLoader::loadImage(){
-    for(int i=0; i<IMG_count; ++i){
-        Uint32 size = SDL_ReadLE32(dataFile);
-        int* buf = (int*)malloc(size);
-        SDL_RWread(dataFile, buf, size, 1);
-        SDL_RWops* tempRW = SDL_RWFromMem(buf, size);
-        Textures[i] = SDL_CreateTextureFromSurface(app.renderer, IMG_LoadPNG_RW(tempRW));
-        if(Textures[i] == NULL){
-            printf("Something wrong with loading texture at %d.\n", i);
-            exit(ERR_FIL_IMG);
-        }
-        SDL_RWclose(tempRW);
-        free(buf);
-    }
-};
-
-void dataLoader::createBack(){
-    //renderTarget = SDL_GetRenderTarget(app.renderer);
-    SDL_Texture* renderTarget = SDL_GetRenderTarget(app.renderer);
-
-    Textures[IMG_BACK] = SDL_CreateTexture(app.renderer, 0, SDL_TEXTUREACCESS_TARGET, GAME_WIDTH, GAME_HEIGHT);
-    SDL_SetTextureBlendMode(Textures[IMG_BACK], SDL_BLENDMODE_NONE);
-    SDL_SetRenderTarget(app.renderer, Textures[IMG_BACK]);
-    for(int y=0; y < gridY; ++y)
-        for(int x=0; x < gridX; ++x){
-            SDL_Rect dest = {x*CELL_SIDE, y*CELL_SIDE, CELL_SIDE, CELL_SIDE};
-            SDL_RenderCopy(app.renderer, Textures[IMG_BACK_LIGHT + (x+y)%2], NULL, &dest);
-        }
-    //SDL_RenderCopy(app.renderer, Textures[IMG_BACK_DARK], NULL, NULL);
-    SDL_SetTextureBlendMode(Textures[IMG_BACK], SDL_BLENDMODE_NONE);
-    SDL_SetRenderTarget(app.renderer, renderTarget);
+    zip_close(archieve);  // Closing archieve
 }
 
-/*void dataLoader::loadAnimation(){
-    for(int i=0; i<ANI_count; ++i){
-        Uint64 size = SDL_ReadLE64(dataFile);
-        int* buf = (int*)malloc(size);
-        SDL_RWread(dataFile, buf, size, 1);
-        SDL_RWops* tempRW = SDL_RWFromMem(buf, size);
-        Animations[i] = IMG_LoadGIFAnimation_RW(tempRW);
-        SDL_RWclose(tempRW);
-        free(buf);
-    }
-};*/
-
-/*void dataLoader::loadAudio(){
-    /*for(int i=0; i<MUS_count; ++i){
-        Uint64 size = SDL_ReadLE64(dataFile);
-        char* buf = (char*)malloc(size);
-        SDL_RWread(dataFile, buf, size, 1);
-        SDL_RWops* tempRW = SDL_RWFromMem(buf, size);
-        Musics[i] = Mix_LoadMUS_RW(tempRW, 1);
-        free(buf);
-        //Musics[i] = Mix_LoadMUSType_RW(tempRW, MUS_OGG, 0);
-        
-        //SDL_RWclose(tempRW);
-        SDL_RWops* tempRW1 = SDL_RWFromFile("snd/mainTheme.ogg", "r");
-        Musics[i] = Mix_LoadMUS_RW(tempRW1, 1);
-    }
-    SDL_RWops* tempRW1 = SDL_RWFromFile("mus/mainTheme.ogg", "r");
-    Musics[MUS_main] = Mix_LoadMUSType_RW(tempRW1, MUS_OGG, 1);
-    SDL_RWops* tempRW2 = SDL_RWFromFile("mus/menuTheme.ogg", "r");
-    Musics[MUS_menu] = Mix_LoadMUSType_RW(tempRW2, MUS_OGG, 1);
-
-    for(int i=0; i<SND_count;++i){
-        Uint64 size = SDL_ReadLE64(dataFile);
-        int* buf = (int*)malloc(size);
-        SDL_RWread(dataFile, buf, size, 1);
-        SDL_RWops* tempRW = SDL_RWFromMem(buf, size);
-        Sounds[i] = Mix_LoadWAV_RW(tempRW, 0);
-        SDL_RWclose(tempRW);
-        free(buf);
-    }
-};*/
-
-void dataLoader::loadFont(){
-    fontData.size = SDL_ReadLE32(dataFile);
-    fontData.fontMem = (char*)malloc(fontData.size);
-    if(SDL_RWread(dataFile, fontData.fontMem, fontData.size, 1) != 1){
-        printf("Something wrong with loading font.\n");
-        exit(ERR_FIL_FNT);
-    }
-};
-
-void dataLoader::init(std::string name){
-    dataFile = SDL_RWFromFile(name.std::string::c_str(), "r");
-    expectCorrection();
-
-    // Loading all data from file
-    loadIcone();
-    loadImage();
-    //loadAnimation();
-    //loadAudio();
-    loadFont();
-
-    // Closing file with data
-    SDL_RWclose(dataFile);
-
-    createBack();
-};
-
-void dataLoader::unload(){
+// Function of clearing all temporary data, loaded from arcieve
+void unloadData(){
     // Unloading data in reverce form from loading
+
     // Deliting font data
-    free(fontData.fontMem);
+    free(fontMemory);
     // Unloading sound effects
-    /*for(int i=0; i < SND_count; ++i){
+    for(int i=0; i < SND_count; ++i){
         Mix_FreeChunk(Sounds[i]);
     }
     // Unloading music effects
@@ -177,9 +265,9 @@ void dataLoader::unload(){
         Mix_FreeMusic(Musics[i]);
     }
     // Unloading gif animations
-    for(int i=0; i<ANIM_count;++i){
+    for(int i=0; i < ANI_count; ++i){
         IMG_FreeAnimation(Animations[i]);
-    }*/
+    }
     // Unloading images
     for(int i = 0; i < IMG_count; ++i){
         SDL_DestroyTexture(Textures[i]);

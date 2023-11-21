@@ -34,7 +34,7 @@ void exitLibraries();
 // Error codes of loading file
 #define ERR_FIL_OTH 0x00030  // error with other file context
 #define ERR_FIL_OPN 0x00031  // error with file openning
-#define ERR_FIL_SEP 0x00032  // error with file separator
+//#define ERR_FIL_SEP 0x00032  // error with file separator
 #define ERR_FIL_ICO 0x00033  // error with file number of icones
 #define ERR_FIL_IMG 0x00034  // error with file number of images
 #define ERR_FIL_ANI 0x00035  // error with file number of animations

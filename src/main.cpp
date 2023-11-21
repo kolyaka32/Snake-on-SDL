@@ -11,7 +11,10 @@
 #include "entity.hpp"
 
 App app;  // Creating main varables
-FontData fontData;  // Global data for creating fonts
+
+// Data for creating fonts
+Uint8* fontMemory;  // Memory with font data
+Uint32 fontSize;  // Size of memory buffer
 
 // Global numbers
 // Last time and previous ticks update
@@ -43,9 +46,9 @@ bool loosing;     // Flag of showing loosing text
 
 // Texts variables and constants
 SDL_Texture* Textures[IMG_count];  // Array of all textures
-//IMG_Animation* Animations[ANIM_count];  // Array of all animations
-//Mix_Music* Musics[MUS_count];  // Array of all music
-//Mix_Chunk* Sounds[SND_count];  // Array of all sound effects
+IMG_Animation* Animations[ANI_count];  // Array of all animations
+Mix_Music* Musics[MUS_count];  // Array of all music
+Mix_Chunk* Sounds[SND_count];  // Array of all sound effects
 
 SDL_Rect BACK_RECT;
 
@@ -66,8 +69,9 @@ int main(int argv, char** args){
     createVideo();  // Creating video output system
     
     // Loading data from file
-    dataLoader loader;
-    loader.init("data.dat");
+    //dataLoader loader;
+    //loader.init("data.dat");
+    loadData("data.zip");
 
     setInitData();  // Setting data from init file to program
 
@@ -174,7 +178,8 @@ int main(int argv, char** args){
     }*/
 
     // Cleaning all data
-    loader.unload();
+    //loader.unload();
+    unloadData();
 
     // Exiting
     deleteVideo();  // Destroying video output

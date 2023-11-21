@@ -67,7 +67,7 @@ public:
     bool in(int x, int y);
 };
 
-/*class Animation
+class Animation
 {
 private:
     //IMG_Animation* anim;
@@ -77,10 +77,10 @@ private:
     uint32_t prevTick;
     SDL_Rect dest;
 public:
-    Animation( SDL_Rect destination, ANIM_types newType );
+    Animation( SDL_Rect destination, ANI_names newType );
     void blit();
     void clear();
-};*/
+};
 
 class Bar
 {

@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(base)  # Main game project
-project(dataCreater)  # Extra program, for compailing all data to one file
 
 # Set source files
 add_executable( base
@@ -48,46 +47,26 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic,--whole-archi
 set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Finding place of external libraries
+# Including SDL-family
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_mixer REQUIRED)
+# Including libzip
+set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/cmake")
+find_package(libzip REQUIRED)
 
-# Base project
-# Including external libraries
+# Including external included directories
 target_include_directories( base
     PUBLIC ${SDL2_INCLUDE_DIRS}
     PUBLIC ${SDL2_image_INCLUDE_DIRS}
     PUBLIC ${SDL2_ttf_config_path}
     PUBLIC ${SDL2_mixer_config_path}
+    PUBLIC &{libzip_INCLUDE_DIRS}
 )
 
+# Including linked libraries
 target_link_libraries(base PUBLIC ${SDL2_LIBRARIES} SDL2_image::SDL2_image mingw32)
 target_link_libraries(base PUBLIC ${SDL2_LIBRARIES} SDL2_ttf::SDL2_ttf mingw32)
 target_link_libraries(base PUBLIC ${SDL2_LIBRARIES} SDL2_mixer::SDL2_mixer mingw32)
-
-# Data compailing project
-add_executable(
-    dataCreater
-    # Base includes and defines
-    src/include.hpp
-    src/define.hpp
-    src/structs.hpp
-
-    # Function of initialasing all data
-    src/init.hpp
-    src/init.cpp
-
-    # Main 
-    src/dataCreater.cpp
-)
-target_include_directories( dataCreater
-    PUBLIC ${SDL2_INCLUDE_DIRS}
-    PUBLIC ${SDL2_image_INCLUDE_DIRS}
-    PUBLIC ${SDL2_ttf_config_path}
-    PUBLIC ${SDL2_mixer_config_path}
-)
-
-target_link_libraries(dataCreater PUBLIC ${SDL2_LIBRARIES} SDL2_image::SDL2_image mingw32)
-target_link_libraries(dataCreater PUBLIC ${SDL2_LIBRARIES} SDL2_ttf::SDL2_ttf mingw32)
-target_link_libraries(dataCreater PUBLIC ${SDL2_LIBRARIES} SDL2_mixer::SDL2_mixer mingw32)
+target_link_libraries(base PUBLIC ${libzip_LIBRARIES} libzip::zip)

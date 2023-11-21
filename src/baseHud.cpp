@@ -6,8 +6,11 @@
 
 // Function of creating font
 TTF_Font* createFont(int size){
-    SDL_RWops* tempRW = SDL_RWFromMem(fontData.fontMem, fontData.size);
-    return TTF_OpenFontRW(tempRW, 1, size);
+    SDL_RWops* fontData = SDL_RWFromMem(fontMemory, fontSize);
+    SDL_RWops* out = SDL_RWFromFile("out.ttf", "w");
+    SDL_RWwrite(out, fontMemory, fontSize, 1);
+    SDL_RWclose(out);
+    return TTF_OpenFontRW(fontData, 1, size);
 };
 
 // Class of static text
@@ -94,8 +97,8 @@ bool Button::in(int x, int y){
 };
 
 
-// GIF animation play
-/*Animation::Animation( SDL_Rect destination, ANI_names newType ){
+// GIF animation class
+Animation::Animation( SDL_Rect destination, ANI_names newType ){
     // Creating animation
     type = newType;
     dest = destination;
@@ -114,7 +117,7 @@ void Animation::blit(){
 
 void Animation::clear(){
     SDL_DestroyTexture(texture);
-};*/
+};
 
 
 // Bar class

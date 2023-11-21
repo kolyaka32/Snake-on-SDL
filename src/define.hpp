@@ -1,21 +1,16 @@
 #pragma once
 
 // Extra modifications for game
-#define MEME_MOD true  // Activate meme include mode
-
-
-
-
+//#define MEME_MOD true  // Activate meme include mode
 
 // System numbers
 #define WINDOWNAME "Snake on SDL"
-#define GAME_WIDTH gridX*CELL_SIDE
-#define GAME_HEIGHT gridY*CELL_SIDE
+#define GAME_WIDTH gridX * CELL_SIDE
+#define GAME_HEIGHT gridY * CELL_SIDE
 #define UP_MENU 100
 #define DOWN_MENU 100
 #define SCREEN_WIDTH GAME_WIDTH
 #define SCREEN_HEIGHT GAME_HEIGHT + UP_MENU + DOWN_MENU
-#define GAME_VERSION 1
 
 // Window and game base balance options
 #define CELL_SIDE 32  // Width and height of mine
@@ -26,6 +21,7 @@
 // Base game colors
 #define BLACK {0, 0, 0, 255}
 #define WHITE {255, 255, 255, 255}
+#define BACKGROUND_COLOR {0, 255, 0, 255}
 
 // Names of directions and they numbers
 enum direction{

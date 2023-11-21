@@ -4,25 +4,16 @@
 #include "define.hpp"
 #include "structs.hpp"
 
-class dataLoader
-{
-private:
-    SDL_RWops* dataFile;
-    void expectCorrection();  // Function of expecting correction of numbers
-    void loadIcone();  // Loading game icone
-    void loadImage();  // Loading all images
-    void createBack();  // Creating game background
-    //void loadAnimation();  // Loading all GIF-animations
-    //void loadMusic();  // Loading all music files
-    //void loadAudio();  // Loading all audio effects
-    void loadFont();  // Loading fonts 
-public:
-    void init(std::string name);  // Function of initialasing and loading data file
-    void unload();
-};
+// Load file with all data
+void loadData(std::string fileName);
+
+// Function of clearing all temporary data, loaded from arcieve
+void unloadData();
+
+// Archieve values
+#define PASSWORD NULL  // Archieve password
 
 // Used numerated numbers
-
 #define ICO_count 1  // Number of icones for better count
 #define FNT_count 1  // Number of fonts for better count
 
@@ -56,15 +47,16 @@ enum IMG_names{
     IMG_BODY_STRAIGHT_FAT,
     IMG_BODY_RIGHT_FAT,
     IMG_END_FAT,
-    IMG_count
+
+    IMG_count // Counter of images
 };
 
 // Names of music in array to use
 enum MUS_names{
     //MUS_main,  // Main in-game song
     //MUS_menu,  // Menu waiting song
-    // Final counter 
-    MUS_count
+    
+    MUS_count  // Music counter
 };
 
 // Names of sound effects in array to use
@@ -75,8 +67,8 @@ enum SND_names{
     // Explosions
     SND_regExplosion,
     SND_sonicExplosion,*/
-    // Final counter 
-    SND_count
+
+    SND_count  // Sounds counter
 };
 
 // Names of animations in array to use
@@ -84,8 +76,7 @@ enum ANI_names{
     /*ANI_menu,  // Menu animation of maxwell cat
     ANI_adv,  // In game advertisment (of watermellon)*/
 
-    // Final counter
-    ANI_count
+    ANI_count  // Animations counter
 };
 
 #define SEPARATOR 0
