@@ -7,9 +7,6 @@
 // Function of creating font
 TTF_Font* createFont(int size){
     SDL_RWops* fontData = SDL_RWFromMem(fontMemory, fontSize);
-    SDL_RWops* out = SDL_RWFromFile("out.ttf", "w");
-    SDL_RWwrite(out, fontMemory, fontSize, 1);
-    SDL_RWclose(out);
     return TTF_OpenFontRW(fontData, 1, size);
 };
 
