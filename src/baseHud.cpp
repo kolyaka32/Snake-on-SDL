@@ -5,7 +5,7 @@
 #include "baseHud.hpp"
 
 // Function of creating font
-TTF_Font* createFont(int size){
+static TTF_Font* createFont(int size){
     SDL_RWops* fontData = SDL_RWFromMem(fontMemory, fontSize);
     return TTF_OpenFontRW(fontData, 1, size);
 };
@@ -50,6 +50,7 @@ void dinamicText::draw(std::string text, const ALIGNMENT_types alignment, SDL_Co
     SDL_RenderCopy(app.renderer, Texture, NULL, &Rect);
 };
 
+
 // Slider class
 Slider::Slider(int y, IMG_names lineImage, IMG_names buttonImage){
     textureLine = Textures[lineImage];
@@ -75,6 +76,7 @@ bool Slider::in(int x, int y){
 int Slider::getX(){
     return destLine.x;
 };
+
 
 // Button class
 Button::Button(int x, int y, IMG_names textureIndex){

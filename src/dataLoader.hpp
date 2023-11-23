@@ -10,8 +10,8 @@ void loadData(std::string fileName);
 // Function of clearing all temporary data, loaded from arcieve
 void unloadData();
 
-// Archieve values
-#define PASSWORD NULL  // Archieve password
+// Archive values
+#define PASSWORD NULL  // Archive password
 
 // Used numerated numbers
 #define ICO_count 1  // Number of icones for better count
@@ -31,7 +31,6 @@ enum IMG_names{
     // Game background
     IMG_BACK_LIGHT,
     IMG_BACK_DARK,
-    IMG_BACK,
     // Game sprites
     IMG_APPLE,
     IMG_POTATO,

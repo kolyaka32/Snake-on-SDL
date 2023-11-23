@@ -33,7 +33,7 @@ void loadInitFile(){
                 language = ENGLISH_LNG;
             }
             else if(lang == "russian empire"){
-                language = RUSSIAN_IMPIRE_LNG;
+                language = IMPIRE_LNG;
             }
             else if(lang == "belarussian"){
                 language = BELARUS_LNG;
@@ -67,24 +67,6 @@ void loadInitFile(){
     in.close();  // Closing reading file
 }
 
-// Creating game background
-void createBackground(){
-    //renderTarget = SDL_GetRenderTarget(app.renderer);
-    SDL_Texture* renderTarget = SDL_GetRenderTarget(app.renderer);
-
-    Textures[IMG_BACK] = SDL_CreateTexture(app.renderer, 0, SDL_TEXTUREACCESS_TARGET, GAME_WIDTH, GAME_HEIGHT);
-    SDL_SetTextureBlendMode(Textures[IMG_BACK], SDL_BLENDMODE_NONE);
-    SDL_SetRenderTarget(app.renderer, Textures[IMG_BACK]);
-    for(int y=0; y < gridY; ++y)
-        for(int x=0; x < gridX; ++x){
-            SDL_Rect dest = {x*CELL_SIDE, y*CELL_SIDE, CELL_SIDE, CELL_SIDE};
-            SDL_RenderCopy(app.renderer, Textures[IMG_BACK_LIGHT + (x+y)%2], NULL, &dest);
-        }
-    //SDL_RenderCopy(app.renderer, Textures[IMG_BACK_DARK], NULL, NULL);
-    SDL_SetTextureBlendMode(Textures[IMG_BACK], SDL_BLENDMODE_NONE);
-    SDL_SetRenderTarget(app.renderer, renderTarget);
-}
-
 void setInitData(){
     // Initialasing constant start text 
     switch (language)  // Setting up language
@@ -96,19 +78,16 @@ void setInitData(){
     case RUSSIAN_LNG:  // Russian language
         setRussianText();
         break;
-    case RUSSIAN_IMPIRE_LNG:  // Russian language
+    case IMPIRE_LNG:  // Russian impire language
         setImpireText();
         break;
-    case BELARUS_LNG:  // Russian language
+    case BELARUS_LNG:  // Bellarussian language
         setBelarusText();
         break;
     }
     // Setting volumes of sounds
     Mix_VolumeMusic(MusicVolume);  // Setting volume of music
     Mix_Volume(-1, EffectsVolume);  // Setting volume of effects
-
-    // Creating game background
-    createBackground();
 }
 
 // Saving initialasing file
@@ -126,7 +105,7 @@ void saveInitFile(){
     case RUSSIAN_LNG:
         setting << "language = russian" << std::endl;
         break;
-    case RUSSIAN_IMPIRE_LNG:
+    case IMPIRE_LNG:
         setting << "language = russian empire" << std::endl;
         break;
     case BELARUS_LNG:

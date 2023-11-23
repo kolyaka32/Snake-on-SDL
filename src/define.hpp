@@ -1,8 +1,5 @@
 #pragma once
 
-// Extra modifications for game
-//#define MEME_MOD true  // Activate meme include mode
-
 // System numbers
 #define WINDOWNAME "Snake on SDL"
 #define GAME_WIDTH gridX * CELL_SIDE
@@ -21,7 +18,7 @@
 // Base game colors
 #define BLACK {0, 0, 0, 255}
 #define WHITE {255, 255, 255, 255}
-#define BACKGROUND_COLOR {0, 255, 0, 255}
+#define BACKGROUND_COLOR 0, 150, 0, 255
 
 // Names of directions and they numbers
 enum direction{

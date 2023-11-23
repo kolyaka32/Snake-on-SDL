@@ -14,8 +14,12 @@ i686-w64-mingw32/
 x86_64-w64-mingw32/
 
 # New include libraries
+bin/
+cmake/
+debug/
 lib/
 include/
+share/
 
 # Prerequisites
 *.d
@@ -50,7 +54,7 @@ include/
 *.out
 *.app
 
-# Archieves
+# Archives
 *.7z
 *.zip
 
