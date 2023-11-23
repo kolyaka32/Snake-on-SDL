@@ -1,6 +1,5 @@
 #include "stdio.h"
 #include "include.hpp"
-#include "define.hpp"
 #include "structs.hpp"
 
 #include "init.hpp"
@@ -50,17 +49,19 @@ void createVideo(){
     }
 }
 
+// Function of deleting window and renders
 void deleteVideo(){
+    Mix_CloseAudio();                   // Closing audio library
 	SDL_DestroyRenderer(app.renderer);  // Destroying renderer
-	SDL_DestroyWindow(app.window);  // Destrying window
-    Mix_CloseAudio();
+	SDL_DestroyWindow(app.window);      // Destrying window
 }
 
+// Function of closing all outside libraries and files
 void exitLibraries(){
     // Closing all outside libraries
     Mix_CloseAudio();  // Closing audio player
-    Mix_Quit();  // Closing mixer player
-	TTF_Quit();  // Closing font library
-    IMG_Quit();  // Closing image library
-    SDL_Quit();  // Closing main sdl library
+    Mix_Quit();        // Closing mixer player
+	TTF_Quit();        // Closing font library
+    IMG_Quit();        // Closing image library
+    SDL_Quit();        // Closing main sdl library
 }

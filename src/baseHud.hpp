@@ -12,7 +12,7 @@ enum ALIGNMENT_types{
 };
 
 // Function of creating font with need height
-TTF_Font* createFont(int size);
+static TTF_Font* createFont(int size);
 
 // Static text on screen with drawing functions
 class staticText
@@ -23,7 +23,7 @@ private:
     SDL_Texture *Texture = NULL;
     SDL_Rect Rect;
 public:
-    void set(std::string text, int size, int x, int y, ALIGNMENT_types alignment = MIDLE_text, SDL_Color color = BLACK);
+    void set(std::string text, int size, int x, int y, ALIGNMENT_types alignment = MIDLE_text, SDL_Color color = WHITE);
     void draw();
     void clear();
 };

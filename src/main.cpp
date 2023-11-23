@@ -10,37 +10,39 @@
 #include "initFile.hpp"
 #include "entity.hpp"
 
-App app;  // Creating main varables
+// Global structures
+App app;              // Creating main varables
 
 // Data for creating fonts
-Uint8* fontMemory;  // Memory with font data
-Uint32 fontSize;  // Size of memory buffer
+Uint8* fontMemory;    // Memory with font data
+uint64_t fontSize;    // Size of memory buffer
 
 // Global numbers
 // Last time and previous ticks update
 Uint64 oldMoveTime;
 Uint64 oldDrawTime;
 // Pause and init settings
-Uint8 language;  // Switched languaged from language_types
-Uint8 MusicVolume;  // Volume of music
+Uint8 language;       // Switched languaged from language_types
+Uint8 MusicVolume;    // Volume of music
 Uint8 EffectsVolume;  // Volume of effects
-Uint16 MaxScore;  // Max previous game score
-Uint16 drawFPS;  // Max terget FPS to draw
-Uint16 score;  // Game score
+Uint32 MaxScore;      // Max previous game score
+Uint16 drawFPS;       // Max terget FPS to draw
+Uint32 score;         // Game score
 
 // Global variables
-Uint8 gridX;
-Uint8 gridY;
-Uint16 moveTime;
-Uint16 length;    // Length of snake
-Uint16 position;  // Position of sell, which updated
-Uint8 fat;        // Flag of setting fat cell
+Uint8 gridX;          // Game field width
+Uint8 gridY;          // Game field height 
+Uint16 moveTime;      // Timer between snake moves
+Uint16 length;        // Length of snake
+Uint16 position;      // Position of sell, which updated
+Uint8 fat;            // Flag of setting fat cell
 
 // Global running flags
 bool running = true;  // Main cycle game flag of running
 bool game_over = true;  // Flag of ending the round
-bool winning;     // Flag of showing winning text
-bool loosing;     // Flag of showing loosing text
+bool winning = false;     // Flag of showing winning text
+bool loosing = false;     // Flag of showing loosing text
+bool skipping = false;    // Flag of showing skipping text
 
 //bool advertisingMode;  // Mode of showing 'advertisment'
 
@@ -84,6 +86,21 @@ int main(int argv, char** args){
     Bar ShieldBar({20, 5, MAX_SHIELD, 10}, {0, 255, 0, 255}, IMG_shield);  // Shield/health bar
     Bar BoostBar({20, 20, 100, 10}, {0, 0, 255, 255}, IMG_bolt);  // Bar of the remaining boost time*/
 
+    // Drawing first screen
+    // Clearing screen before starting draw
+    SDL_SetRenderDrawColor(app.renderer, BACKGROUND_COLOR);
+    SDL_RenderClear(app.renderer);
+
+    // Drawing game background
+    for(int y=0; y < gridY; ++y)
+        for(int x=0; x < gridX; ++x){
+            SDL_Rect dest = {x * CELL_SIDE, y * CELL_SIDE + UP_MENU, CELL_SIDE, CELL_SIDE};
+            SDL_RenderCopy(app.renderer, Textures[IMG_BACK_LIGHT + (x + y) % 2], NULL, &dest);
+        }
+
+    esc.blit();
+    SDL_RenderPresent(app.renderer);
+
     // Cycle variables
     SDL_Event event;
     bool Shooting;
@@ -108,6 +125,7 @@ int main(int argv, char** args){
 
                 if (event.key.keysym.sym == SDLK_r){
                     game_over = true;
+                    skipping = true;
                 }
                 if (event.key.keysym.sym == SDLK_ESCAPE){
                     pause();
@@ -137,33 +155,43 @@ int main(int argv, char** args){
 
         // Drawing all at screen
         if(SDL_GetTicks64() - oldDrawTime > 1000 / drawFPS){  // Checking, if drawing need
-            SDL_SetRenderDrawColor(app.renderer, 0, 255, 0, 255);
+            // Drawing screen background
+            SDL_SetRenderDrawColor(app.renderer, BACKGROUND_COLOR);
             SDL_RenderClear(app.renderer);
-            SDL_RenderCopy(app.renderer, Textures[IMG_BACK], NULL, &BACK_RECT);  // Drawing background at screen
 
+            // Drawing game background
+            for(int y=0; y < gridY; ++y)
+                for(int x=0; x < gridX; ++x){
+                    SDL_Rect dest = {x * CELL_SIDE, y * CELL_SIDE + UP_MENU, CELL_SIDE, CELL_SIDE};
+                    SDL_RenderCopy(app.renderer, Textures[IMG_BACK_LIGHT + (x+y) % 2], NULL, &dest);
+                }
+
+            // Drawing game sprites
             player.blit();  // Drawing player at screen
             Apple.blit();  // Drawing apple at screen
             for(int i = 0; i<length; ++i){
-                TileArray[i].blit();  // Drawing body at screen
+                TileArray[i].blit();  // Drawing all body at screen
             }
 
+            // Drawing menu at screen
             esc.blit();
             scoreText.draw(std::to_string(score), MIDLE_text);
-            
-            SDL_RenderPresent(app.renderer);  // Blitting all objects on screen
+
+            // Blitting all objects on screen
+            SDL_RenderPresent(app.renderer);  
 
             oldDrawTime = SDL_GetTicks64();  // Getting last update time
         };
 
         // Waiting until next moving or drawing
-        int MoveSleep = ((SDL_GetTicks64() - oldMoveTime) - moveTime);
-        int DrawSleep = ((SDL_GetTicks64() - oldDrawTime) - 1000/drawFPS);
+        Sint32 MoveSleep = ((SDL_GetTicks64() - oldMoveTime) - moveTime);
+        Sint32 DrawSleep = ((SDL_GetTicks64() - oldDrawTime) - 1000/drawFPS);
         SDL_Delay( MAX(MIN( MoveSleep, DrawSleep ), 0) );
 	}
     // Exiting program
-    saveInitFile();  // Saving all data to setting file for next start
-
-    // Clearing dinamic structs
+    // Saving all data to setting file for next start
+    saveInitFile();  
+    
     // Clearing statick texts
     for(int i=0; i < TXT_count; ++i){
         texts[i].clear();
@@ -178,7 +206,6 @@ int main(int argv, char** args){
     }*/
 
     // Cleaning all data
-    //loader.unload();
     unloadData();
 
     // Exiting

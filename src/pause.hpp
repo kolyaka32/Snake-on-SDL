@@ -8,7 +8,7 @@ enum{
     STANDART_LNG,        // Standart type of language (english)
     ENGLISH_LNG,         // English language
     RUSSIAN_LNG,         // Russian language
-    RUSSIAN_IMPIRE_LNG,  // Russian impire meme language
+    IMPIRE_LNG,  // Russian impire meme language
     BELARUS_LNG          // Belarus meme language
 } LANGUAGE_types;
 
@@ -36,7 +36,6 @@ enum TXT_types{
     TXT_WAIT_WIN,
     TXT_WAIT_LOOSE,
     TXT_WAIT_SKIP,
-    TXT_WAIT_KEY,
 
     TXT_PAUSE_PAUSE,
     TXT_PAUSE_MUSIC,
@@ -54,7 +53,7 @@ extern staticText texts[TXT_count];
 extern Uint8 language;  // Language settings
 extern Uint8 MusicVolume;  // Start volume of music
 extern Uint8 EffectsVolume;  // Start volume of effects
-extern Uint16 MaxScore;  // Maximal player score
+extern Uint32 MaxScore;  // Maximal player score
 extern Uint16 drawFPS;  // Setted frames per seconds
 
 

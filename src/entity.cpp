@@ -24,7 +24,7 @@ int Entity::getPos(){
 };
 
 
-// Head class
+// Head (player) class
 void Head::reset(){
     init(gridX/2, gridY/2 + START_WIDTH, IMG_HEAD_STRAIGHT);
     vec = UP; 
@@ -65,6 +65,7 @@ int Head::move(){
     // Detecting exiting grid
     if(x < 0 || x >= gridX || y < 0 || y >= gridY){
         game_over = true;
+        loosing = true;
         return -1;
     }
     // Detecting collision with snake
@@ -72,11 +73,12 @@ int Head::move(){
     for(int i=0; i < length; ++i){
         if(i != position && coord == TileArray[i].getPos()){
             game_over = true;
+            loosing = true;
             return -2;
         }
     }
     // Detecting collision with apple
-    if(y*gridX + x == Apple.getPos()){
+    if(getPos() == Apple.getPos()){
         Apple.FindLocation();  // Getting new location of apple
         length++;
         score += ADD_SCORE;
@@ -103,16 +105,7 @@ int Head::move(){
 
 void Head::blit(){
     SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
-    // 
-    if(vec == newVec){
-        SDL_RenderCopyEx( app.renderer, Textures[IMG_HEAD_STRAIGHT], NULL, &dest, vec*90, NULL, SDL_FLIP_NONE );
-    }
-    else if(newVec - vec  == -1 || newVec - vec == 3){
-        SDL_RenderCopyEx( app.renderer, Textures[IMG_HEAD_LEFT], NULL, &dest, 270 + vec*90, NULL, SDL_FLIP_NONE );
-    }
-    else if(newVec - vec == 1 || newVec - vec == -3){
-        SDL_RenderCopyEx( app.renderer, Textures[IMG_HEAD_RIGHT], NULL, &dest, 90 + vec*90, NULL, SDL_FLIP_NONE );
-    }
+    SDL_RenderCopyEx( app.renderer, Textures[IMG_HEAD_LEFT + (5 + newVec - vec) % 4], NULL, &dest,  newVec*90, NULL, SDL_FLIP_NONE );
 };
 
 

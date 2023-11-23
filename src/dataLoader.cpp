@@ -8,7 +8,7 @@
 #include "dataLoader.hpp"
 
 // Arcieve local structs
-zip_t* archieve;  // Archieve with all data
+static zip_t* archive;  // Archive with all data
 
 // Counters of loaded files
 static Uint8 loadedImages;
@@ -16,26 +16,26 @@ static Uint8 loadedAnimations;
 static Uint8 loadedMusics;
 static Uint8 loadedSounds;
 
-// Function of open archieve and setting base password
-zip_t* openArchieve(std::string archieveName){
-    // Open archieve with need name
-    archieve = zip_open(archieveName.std::string::c_str(), ZIP_RDONLY, NULL);
+// Function of open archive and setting base password
+zip_t* openarchive(std::string archiveName){
+    // Open archive with need name
+    archive = zip_open(archiveName.std::string::c_str(), ZIP_RDONLY, NULL);
 
     #if PASSWORD
-    zip_set_default_password(archieve, PASSWORD);
+    zip_set_default_password(archive, PASSWORD);
     #endif
 
-    // Returning archieve for checking correction
-    return archieve;
+    // Returning archive for checking correction
+    return archive;
 };
 
-// Function of getting data of archieve file
-static inline SDL_RWops* dataFromArchieve(const char* name){
+// Function of getting data of archive file
+static inline SDL_RWops* dataFromarchive(const char* name){
     // Openning need file
-    zip_file_t* file = zip_fopen_encrypted(archieve, name, 0, PASSWORD);
+    zip_file_t* file = zip_fopen_encrypted(archive, name, 0, PASSWORD);
     
     zip_stat_t st;
-	zip_stat(archieve, name, 0, &st);  // Getting data of current file
+	zip_stat(archive, name, 0, &st);  // Getting data of current file
     // Checking correction of file
     if(st.size == 0){  
         return NULL;
@@ -56,7 +56,7 @@ static inline SDL_RWops* dataFromArchieve(const char* name){
 // Function of loading game icone
 static unsigned loadIcone(const char* name){
     // Getting icone data
-    SDL_RWops* tempRW = dataFromArchieve(name);
+    SDL_RWops* tempRW = dataFromarchive(name);
 
     // Setting window icone
     SDL_Surface* iconeImage = IMG_LoadICO_RW(tempRW);
@@ -72,7 +72,7 @@ static unsigned loadIcone(const char* name){
 // Functions of loading selected image file
 static void loadPicture(const char* name, IMG_names number){
     // Getting selected picture data
-    SDL_RWops* tempRW = dataFromArchieve(name);
+    SDL_RWops* tempRW = dataFromarchive(name);
     // Creating texture from data
     Textures[number] = SDL_CreateTextureFromSurface(app.renderer, IMG_LoadPNG_RW(tempRW));
     SDL_RWclose(tempRW);
@@ -86,7 +86,7 @@ static void loadPicture(const char* name, IMG_names number){
 // Function of loading selected GIF animation
 static void loadAnimation(const char* name, ANI_names number){
     // Getting selected animation data
-    SDL_RWops* tempRW = dataFromArchieve(name);
+    SDL_RWops* tempRW = dataFromarchive(name);
     // Creating animation from data
     Animations[number] = IMG_LoadAnimation_RW(tempRW, 0);
     SDL_RWclose(tempRW);
@@ -100,7 +100,7 @@ static void loadAnimation(const char* name, ANI_names number){
 // Function of loading selected music file
 static void loadMusic(const char* name, MUS_names number){
     // Getting selected music track data
-    SDL_RWops* tempRW = dataFromArchieve(name);
+    SDL_RWops* tempRW = dataFromarchive(name);
     // Creating music track from data
     Musics[number] = Mix_LoadMUSType_RW(tempRW, MUS_MP3, 0);
     //Animations[number] = IMG_LoadAnimation_RW(tempRW, 1);
@@ -115,7 +115,7 @@ static void loadMusic(const char* name, MUS_names number){
 // Function of loading selected sound
 static void loadSound(const char* name, SND_names number){
     // Getting selected sound data
-    SDL_RWops* tempRW = dataFromArchieve(name);
+    SDL_RWops* tempRW = dataFromarchive(name);
     // Creating sound from data
     Sounds[number] = Mix_LoadWAV_RW(tempRW, 0);
     //Animations[number] = IMG_LoadAnimation_RW(tempRW, 1);
@@ -130,10 +130,10 @@ static void loadSound(const char* name, SND_names number){
 // Function of loading font
 static unsigned loadFont(const char* name){
     // Openning font file
-    zip_file_t* file = zip_fopen_encrypted(archieve, name, 0, PASSWORD);
+    zip_file_t* file = zip_fopen_encrypted(archive, name, 0, PASSWORD);
     
     zip_stat_t st;
-	zip_stat(archieve, name, 0, &st);  // Getting data from file
+	zip_stat(archive, name, 0, &st);  // Getting data from file
     // Checking correction of file
     if(st.size == 0){  
         return 0;
@@ -165,7 +165,6 @@ static unsigned loadAllImages(){
     // Game background
     loadPicture("img/kletka_svet.png", IMG_BACK_LIGHT);
     loadPicture("img/kletka_tyma.png", IMG_BACK_DARK);
-    loadPicture("img/none.png", IMG_BACK);
     // Game sprites
     // Eatable objects
     loadPicture("img/Apple.png", IMG_APPLE);
@@ -215,13 +214,13 @@ static unsigned loadAllSounds(){
 };
 
 void loadData(std::string fileName){
-    // Opening archieve
-    if(openArchieve(fileName) == NULL){
+    // Opening archive
+    if(openarchive(fileName) == NULL){
         printf("Can't load arcieve");
         exit(ERR_FIL_OPN);
     }  
 
-    // Loading data from archieve
+    // Loading data from archive
     if(loadIcone("img/Game.ico") != ICO_count){
         printf("Can't load game icone");
         exit(ERR_FIL_ICO);
@@ -247,7 +246,8 @@ void loadData(std::string fileName){
         exit(ERR_FIL_FNT);
     }
 
-    zip_close(archieve);  // Closing archieve
+    // Closing archive
+    zip_close(archive);
 }
 
 // Function of clearing all temporary data, loaded from arcieve

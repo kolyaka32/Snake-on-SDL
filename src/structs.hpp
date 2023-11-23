@@ -13,7 +13,7 @@ struct App{
 
 // Data for creating fonts
 extern Uint8* fontMemory;  // Memory with font data
-extern Uint32 fontSize;  // Size of memory buffer
+extern uint64_t fontSize;  // Size of memory buffer
 
 // Creating main varables
 extern App app;  // Global main render and window
@@ -35,6 +35,7 @@ extern bool running;     // Flag of main cycle work
 extern bool game_over;   // Flag of showing loosing screen
 extern bool winning;     // Flag of showing winning text
 extern bool loosing;     // Flag of showing loosing text
+extern bool skipping;    // Flag of showing skipping text
 //extern bool advertisingMode;  // Mode of showing 'advertisment'
 
 // Main glabal variables
@@ -42,7 +43,7 @@ extern Uint8 gridX;
 extern Uint8 gridY;
 extern Uint16 moveTime;
 extern Uint16 length;    // Length of snake
-extern Uint16 score;     // Number of eaten apples
+extern Uint32 score;     // Number of eaten apples
 extern Uint16 position;  // Position of sell, which updated
 extern Uint16 preTick;   // Previous tick time
 extern Uint8 fat;        // Flag of setting fat cell
