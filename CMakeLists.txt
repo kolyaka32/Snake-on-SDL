@@ -39,11 +39,10 @@ add_executable( base
     # Adding game icone
     src/set.rc
 )
-# Setting static dlls
 
 set(CMAKE_CXX_STANDARD_LIBRARIES "-static-libgcc -static-libstdc++ -lwsock32 -lws2_32 -mwindows ${CMAKE_CSS_STANDARD_LIBRARIES}")
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive")
-set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive")
+#set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 
 # Static?
 #set(STATIC_LIB lib_static)
@@ -64,13 +63,15 @@ set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Finding place of external libraries
 # Including SDL-family
-find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
-find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-# Including libzip
+find_package(SDL2 CONFIG REQUIRED)
+find_package(SDL2_image CONFIG REQUIRED)
+find_package(SDL2_ttf CONFIG REQUIRED)
+find_package(SDL2_mixer CONFIG REQUIRED)
+## Including libzip
 set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/share")
 find_package(libzip CONFIG REQUIRED)
+# Including libzippp
+#find_package(libzippp CONFIG REQUIRED)
 
 # Including external included directories
 include_directories(${SDL2_INCLUDE_DIRS})
@@ -79,4 +80,5 @@ include_directories(${SDL2_INCLUDE_DIRS})
 target_link_libraries(base PRIVATE ${SDL2_LIBRARIES} SDL2_image::SDL2_image mingw32)
 target_link_libraries(base PRIVATE SDL2_ttf::SDL2_ttf mingw32)
 target_link_libraries(base PRIVATE SDL2_mixer::SDL2_mixer mingw32)
-target_link_libraries(base PRIVATE libzip::zip)
+target_link_libraries(base PUBLIC ${libzip_LIBRARIES} libzip::zip)
+#target_link_libraries(base PRIVATE libzippp::libzippp)

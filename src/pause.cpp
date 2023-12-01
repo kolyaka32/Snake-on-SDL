@@ -93,7 +93,7 @@ void setBelarusText(){
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Warning", "Attention, this translation is only a joke and is not intended to offend anyone!", app.window);
 
     texts[TXT_MENU_NAME].set("ШМУП бульба!", 64, SCREEN_WIDTH/2, GAME_HEIGHT/5);
-    texts[TXT_MENU_KEYS].set("Клавішы са стрэлкамі перамяшчаюць бульбу, прабел для стральбы па бульбе", 22, SCREEN_WIDTH/2, GAME_HEIGHT*2/5);
+    texts[TXT_MENU_KEYS].set("Клавішы ca стрэлкамі перамяшчаюць бульбу, прабел для стральбы па бульбе", 22, SCREEN_WIDTH/2, GAME_HEIGHT*2/5);
     texts[TXT_MENU_REST].set("Націсніце любую бульба, каб пачаць бульба", 18, SCREEN_WIDTH/2, GAME_HEIGHT*2/5+70);
 
     texts[TXT_MENU_SCORE].set("Ваш апошні вынік бульба: " + std::to_string(score), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5);
@@ -330,8 +330,6 @@ void startMenu(){
     SDL_RenderReadPixels(app.renderer, NULL, SDL_PIXELFORMAT_ARGB8888, screenSur->pixels, screenSur->pitch);
     SDL_Texture* screen = SDL_CreateTextureFromSurface(app.renderer, screenSur);
     SDL_FreeSurface(screenSur);
-
-    //SDL_SaveBMP(SDL_GetWindowSurface(app.window), "out.bmp");
 
     // Starting loop for waiting for start
     bool waiting = true;
