@@ -1,22 +1,10 @@
 #pragma once
 
-#include "baseHud.hpp"
+#include "baseGUI.hpp"
 #include "structs.hpp"
 
-// Types of language
-enum{
-    STANDART_LNG,        // Standart type of language (english)
-    ENGLISH_LNG,         // English language
-    RUSSIAN_LNG,         // Russian language
-    IMPIRE_LNG,  // Russian impire meme language
-    BELARUS_LNG          // Belarus meme language
-} LANGUAGE_types;
-
-// Setting text of interface
-void setEnglishText();
-void setRussianText();
-void setImpireText();
-void setBelarusText();
+// Functions for setting text at his place and update it
+void setAllText();
 
 // Pause menu with settings
 void pause();
@@ -39,21 +27,20 @@ enum TXT_types{
 
     TXT_PAUSE_PAUSE,
     TXT_PAUSE_MUSIC,
-    TXT_PAUSE_SOUND,
-
-    TXT_count
+    TXT_PAUSE_SOUND
 };
 
+#define TXT_count 11  // Final counter of all texts
+
 // Declaring static text
-extern staticText texts[TXT_count];
+extern GUI::fileText* texts;
+//extern GUI::staticText texts[TXT_count];
 
 //extern Animation Advertisment;*/
 
 // External values to save and load from settings file
-extern Uint8 language;  // Language settings
+extern LNG_types language;  // Language settings
 extern Uint8 MusicVolume;  // Start volume of music
 extern Uint8 EffectsVolume;  // Start volume of effects
 extern Uint32 MaxScore;  // Maximal player score
 extern Uint16 drawFPS;  // Setted frames per seconds
-
-

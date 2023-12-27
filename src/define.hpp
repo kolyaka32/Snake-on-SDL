@@ -1,5 +1,8 @@
 #pragma once
 
+#define DEBUG true  // Debugging flag for testing
+#define ARCHIEVE_LOADING !DEBUG  // Flag of loading data from archieve (or from folder)
+
 // System numbers
 #define WINDOWNAME "Snake on SDL"
 #define GAME_WIDTH gridX * CELL_SIDE
@@ -19,6 +22,21 @@
 #define BLACK {0, 0, 0, 255}
 #define WHITE {255, 255, 255, 255}
 #define BACKGROUND_COLOR 0, 150, 0, 255
+
+// Types of language
+enum LNG_types{
+    LNG_STANDART,        // Standart type of language (english)
+    LNG_ENGLISH,         // English language
+    LNG_RUSSIAN,         // Russian language
+    LNG_IMPIRE,          // Russian impire meme language
+    LNG_BELARUS,         // Belarus meme language
+};
+
+#define LNG_count 4      // Final counter of all languages
+
+// Types of data
+typedef uint8_t coord;  // Type of data for coordinates
+typedef uint16_t count;  // Type of data for mines counters
 
 // Names of directions and they numbers
 enum direction{

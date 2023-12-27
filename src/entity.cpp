@@ -32,16 +32,16 @@ void Head::reset(){
 };
 
 void Head::setVector(SDL_Keycode key){
-    if (key == SDLK_w && player.vec != DOWN){
+    if ((key == SDLK_w || key == SDLK_UP) && player.vec != DOWN){
         player.newVec = UP;
     }
-    if (key == SDLK_d && player.vec != LEFT){
+    if ((key == SDLK_d || key == SDLK_LEFT) && player.vec != LEFT){
         player.newVec = RIGHT;
     }
-    if (key == SDLK_s && player.vec != UP){
+    if ((key == SDLK_s || key == SDLK_DOWN) && player.vec != UP){
         player.newVec = DOWN;
     }
-    if (key == SDLK_a && player.vec != RIGHT){
+    if ((key == SDLK_a || key == SDLK_LEFT) && player.vec != RIGHT){
         player.newVec = LEFT;
     }
 };

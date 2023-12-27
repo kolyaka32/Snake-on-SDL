@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(base)  # Main game project
+project(snake)  # Main game project
 
 # Set source files
-add_executable( base
+add_executable( ${CMAKE_PROJECT_NAME}
     # Base includes and defines
     src/include.hpp
     src/define.hpp
@@ -18,8 +18,8 @@ add_executable( base
     src/dataLoader.cpp
 
     # Base interface
-    src/baseHud.hpp
-    src/baseHud.cpp
+    src/baseGUI.hpp
+    src/baseGUI.cpp
 
     # Interface of game pausing
     src/pause.hpp
@@ -44,20 +44,6 @@ set(CMAKE_CXX_STANDARD_LIBRARIES "-static-libgcc -static-libstdc++ -lwsock32 -lw
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive")
 #set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 
-# Static?
-#set(STATIC_LIB lib_static)
-#set(SHARE_LIB lib_share)
-
-#set(STATIC_OTHER_LIB lib_otherstatic)
-#set(SHARE_OTHER_LIB lib_othershare)
-
-#set_target_properties(base PROPERTIES LINK_SEARCH_START_STATIC 1)
-#set_target_properties(base PROPERTIES LINK_SEARCH_END_STATIC 1)
-#set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-
-#add_library(${STATIC_LIB} STATIC ${STATIC_LIB}.cpp)
-#add_library(${SHARE_LIB} SHARED ${SHARE_LIB}.cpp)
-
 # Including external libraries
 set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -67,18 +53,16 @@ find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2_image CONFIG REQUIRED)
 find_package(SDL2_ttf CONFIG REQUIRED)
 find_package(SDL2_mixer CONFIG REQUIRED)
-## Including libzip
+
+# Including libzip
 set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/share")
 find_package(libzip CONFIG REQUIRED)
-# Including libzippp
-#find_package(libzippp CONFIG REQUIRED)
 
 # Including external included directories
 include_directories(${SDL2_INCLUDE_DIRS})
 
 # Including linked libraries
-target_link_libraries(base PRIVATE ${SDL2_LIBRARIES} SDL2_image::SDL2_image mingw32)
-target_link_libraries(base PRIVATE SDL2_ttf::SDL2_ttf mingw32)
-target_link_libraries(base PRIVATE SDL2_mixer::SDL2_mixer mingw32)
-target_link_libraries(base PUBLIC ${libzip_LIBRARIES} libzip::zip)
-#target_link_libraries(base PRIVATE libzippp::libzippp)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2_image::SDL2_image mingw32)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE SDL2_ttf::SDL2_ttf mingw32)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE SDL2_mixer::SDL2_mixer mingw32)
+target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${libzip_LIBRARIES} libzip::zip)
