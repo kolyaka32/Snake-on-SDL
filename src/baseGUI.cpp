@@ -1,32 +1,86 @@
 #include "include.hpp"
+#include <string.h>
 #include "define.hpp"
 #include "structs.hpp"
 #include "dataLoader.hpp"
-#include "baseHud.hpp"
+#include "baseGUI.hpp"
+#include "pause.hpp"
 
-// Function of creating font
-static TTF_Font* createFont(int size){
+using namespace GUI;
+
+// Function of creating font with need height
+static TTF_Font* createFont(Uint8 size){
     SDL_RWops* fontData = SDL_RWFromMem(fontMemory, fontSize);
     return TTF_OpenFontRW(fontData, 1, size);
 };
 
-// Class of static text
-void staticText::clear(){
+staticText::staticText(char* newText, const Uint8 size, const float x, const float y, const ALIGNMENT_types newAligment, const SDL_Color newColor){
+    Font = createFont(size);
+    text = newText;
+    posX = x;
+    Rect.y = (SCREEN_HEIGHT) * y;
+    aligment = newAligment;
+    color = newColor;
+};
+
+void staticText::updateText(LNG_types language){
+    Uint16 i = 0;
+    for(Uint8 end = 0; (end != language); ++i){
+        if(text[i] == '\0'){
+            end++;
+        }
+    }
+    
+    Surface = TTF_RenderUTF8_Solid(Font, text + i, color);
+    Texture = SDL_CreateTextureFromSurface(app.renderer, Surface);
+    SDL_QueryTexture(Texture, NULL, NULL, &Rect.w, &Rect.h);
+    Rect.x = (SCREEN_WIDTH) * posX - (Rect.w * aligment / 2); 
+};
+
+void staticText::updateText(LNG_types language, int number){
+    char title[100];
+    Uint8 start = 0;
+    for(Uint8 end = 0; (end != language); ++start){
+        if(text[start] == '\0'){
+            end++;
+        }
+    }
+    Uint8 d = 0;
+    for(int i=start; text[i]; ++i ){
+        if(text[i] == '%'){
+            Uint8 end = 0;
+            int num = number;
+            do{
+                num/=10;
+                end++;
+            } while(num);
+            d += end;
+            do {   
+                title[--d] = '0' + number % 10;
+                number /= 10;
+            } while (number);
+            d += end;
+        }
+        else{
+            title[d++] = text[i];
+        }
+    }
+    title[d] = '\0';
+    
+    Surface = TTF_RenderUTF8_Solid(Font, title, color);
+    Texture = SDL_CreateTextureFromSurface(app.renderer, Surface);
+    SDL_QueryTexture(Texture, NULL, NULL, &Rect.w, &Rect.h);
+    Rect.x = (SCREEN_WIDTH) * posX - (Rect.w * aligment / 2); 
+};
+
+void staticText::blit(){
+    SDL_RenderCopy(app.renderer, Texture, NULL, &Rect);
+};
+
+staticText::~staticText(){
     SDL_FreeSurface(Surface);
     SDL_DestroyTexture(Texture);
     TTF_CloseFont(Font);
-};
-
-void staticText::set(std::string text, int size, int x, int y, ALIGNMENT_types alignment, SDL_Color color){
-    Font = createFont(size);
-    Surface = TTF_RenderUTF8_Solid(Font, text.std::string::c_str(), color);
-    Texture = SDL_CreateTextureFromSurface(app.renderer, Surface);
-    SDL_QueryTexture(Texture, NULL, NULL, &Rect.w, &Rect.h);
-    Rect.x = x - Rect.w * alignment/2; Rect.y = y;
-};
-
-void staticText::draw(){
-    SDL_RenderCopy(app.renderer, Texture, NULL, &Rect);
 };
 
 
@@ -96,6 +150,7 @@ bool Button::in(int x, int y){
 };
 
 
+#if ANI_count
 // GIF animation class
 Animation::Animation( SDL_Rect destination, ANI_names newType ){
     // Creating animation
@@ -108,7 +163,7 @@ Animation::Animation( SDL_Rect destination, ANI_names newType ){
 void Animation::blit(){
     texture = SDL_CreateTextureFromSurface(app.renderer, Animations[type]->frames[frame]);
     SDL_RenderCopy(app.renderer, texture, NULL, &dest);
-    if(SDL_GetTicks64() > prevTick + Animations[type]->delays[0]*2/3){
+    if(SDL_GetTicks64() > prevTick + Animations[type]->delays[0]){
         frame = (frame+1) % Animations[type]->count;
         prevTick = SDL_GetTicks64();
     }
@@ -117,6 +172,7 @@ void Animation::blit(){
 void Animation::clear(){
     SDL_DestroyTexture(texture);
 };
+#endif
 
 
 // Bar class
@@ -132,7 +188,7 @@ Bar::Bar( const SDL_Rect dest, SDL_Color newColor, IMG_names icone ){
     IconeRect.w = 14;
     IconeRect.h = 16;
     IconeRect.y -= 2;
-    IconeRect.x -= IconeRect.w+2;
+    IconeRect.x -= IconeRect.w + 2;
 };
 
 void Bar::blit( int width ){
@@ -143,4 +199,3 @@ void Bar::blit( int width ){
     SDL_RenderFillRect(app.renderer, &Front_rect);
     SDL_RenderCopy(app.renderer, IconeTexture, NULL, &IconeRect);  // Rendering icone
 };
-

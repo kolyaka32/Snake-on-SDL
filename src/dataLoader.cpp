@@ -2,22 +2,22 @@
 #include "define.hpp"
 #include "structs.hpp"
 
-#include "zip.h"
-
 #include "init.hpp"
 #include "dataLoader.hpp"
+
+typedef Uint8 counter;  // Type of data for count number of loaded objects
+
+// Functions of loading need outside data
+#if ARCHIEVE_LOADING
+// Functions for loading data from archieve
+// Loading need library
+#include "zip.h"
 
 // Arcieve local structs
 static zip_t* archive;  // Archive with all data
 
-// Counters of loaded files
-static Uint8 loadedImages;
-static Uint8 loadedAnimations;
-static Uint8 loadedMusics;
-static Uint8 loadedSounds;
-
 // Function of open archive and setting base password
-zip_t* openarchive(std::string archiveName){
+static inline zip_t* openarchive(std::string archiveName){
     // Open archive with need name
     archive = zip_open(archiveName.std::string::c_str(), ZIP_RDONLY, NULL);
 
@@ -52,9 +52,10 @@ static inline SDL_RWops* dataFromarchive(const char* name){
     return tempRW;
 };
 
-// Functions of loading objects
+// Icone functions
+#if ICO_count
 // Function of loading game icone
-static unsigned loadIcone(const char* name){
+inline unsigned loadIcone(const char* name){
     // Getting icone data
     SDL_RWops* tempRW = dataFromarchive(name);
 
@@ -68,7 +69,11 @@ static unsigned loadIcone(const char* name){
     SDL_FreeSurface(iconeImage);
     return ICO_count;  // Returning correction of loading
 };
+#endif
 
+// Images functions
+#if IMG_count
+static counter loadedImages;
 // Functions of loading selected image file
 static void loadPicture(const char* name, IMG_names number){
     // Getting selected picture data
@@ -82,7 +87,11 @@ static void loadPicture(const char* name, IMG_names number){
         loadedImages++;
     };
 };
+#endif
 
+// Animations functions
+#if ANI_count
+static counter loadedAnimations;
 // Function of loading selected GIF animation
 static void loadAnimation(const char* name, ANI_names number){
     // Getting selected animation data
@@ -96,29 +105,34 @@ static void loadAnimation(const char* name, ANI_names number){
         loadedAnimations++;
     };
 };
+#endif
 
+// Musics functions
+#if MUS_count
+static counter loadedMusics;
 // Function of loading selected music file
 static void loadMusic(const char* name, MUS_names number){
     // Getting selected music track data
-    SDL_RWops* tempRW = dataFromarchive(name);
+    MusicsData[number] = dataFromarchive(name);
     // Creating music track from data
-    Musics[number] = Mix_LoadMUSType_RW(tempRW, MUS_MP3, 0);
-    //Animations[number] = IMG_LoadAnimation_RW(tempRW, 1);
-    SDL_RWclose(tempRW);
+    Musics[number] = Mix_LoadMUS_RW(MusicsData[number], 0);
 
     // Checking correction of loaded file
     if(Musics[number] != NULL){
         loadedMusics++;
     };
 };
+#endif
 
+// Sounds functions
+#if SND_count
+static counter loadedSounds;
 // Function of loading selected sound
 static void loadSound(const char* name, SND_names number){
     // Getting selected sound data
     SDL_RWops* tempRW = dataFromarchive(name);
     // Creating sound from data
     Sounds[number] = Mix_LoadWAV_RW(tempRW, 0);
-    //Animations[number] = IMG_LoadAnimation_RW(tempRW, 1);
     SDL_RWclose(tempRW);
 
     // Checking correction of loaded file
@@ -126,8 +140,10 @@ static void loadSound(const char* name, SND_names number){
         loadedSounds++;
     };
 };
+#endif
 
 // Function of loading font
+#if FNT_count
 static unsigned loadFont(const char* name){
     // Openning font file
     zip_file_t* file = zip_fopen_encrypted(archive, name, 0, PASSWORD);
@@ -148,8 +164,107 @@ static unsigned loadFont(const char* name){
     // Checking correction
     return FNT_count;
 };
+#endif
+#else
+// Trying loading data from folder for testing
 
-// Functions of loading objects from lists
+#if ICO_count
+// Function of loading game icone
+inline unsigned loadIcone(const char* name){
+    // Getting icone data
+    SDL_Surface* iconeImage = IMG_Load(name);
+    // Setting window icone
+    SDL_SetWindowIcon(app.window, iconeImage);
+    SDL_FreeSurface(iconeImage);
+    return ICO_count;  // Returning correction of loading
+};
+#endif
+
+// Images functions
+#if IMG_count
+static counter loadedImages;
+// Functions of loading selected image file
+static void loadPicture(const char* name, IMG_names number){
+    // Loading texture from data
+    Textures[number] = IMG_LoadTexture(app.renderer, name);
+
+    // Checking correction of loaded file
+    if(Textures[number] != NULL){
+        loadedImages++;
+    };
+};
+#endif
+
+// Animations functions
+#if ANI_count
+static counter loadedAnimations;
+// Function of loading selected GIF animation
+static void loadAnimation(const char* name, ANI_names number){
+    // Creating animation from data
+    Animations[number] = IMG_LoadAnimation(name);
+
+    // Checking correction of loaded file
+    if(Animations[number] != NULL){
+        loadedAnimations++;
+    };
+};
+#endif
+
+// Musics functions
+#if MUS_count
+static counter loadedMusics;
+// Function of loading selected music file
+static void loadMusic(const char* name, MUS_names number){
+    // Creating music track from data
+    Musics[number] = Mix_LoadMUS(name);
+
+    // Checking correction of loaded file
+    if(Musics[number] != NULL){
+        loadedMusics++;
+    };
+};
+#endif
+
+// Sounds functions
+#if SND_count
+static counter loadedSounds;
+// Function of loading selected sound
+static void loadSound(const char* name, SND_names number){
+    // Creating sound from data
+    Sounds[number] = Mix_LoadWAV(name);
+
+    // Checking correction of loaded file
+    if(Sounds[number] != NULL){
+        loadedSounds++;
+    };
+};
+#endif
+
+// Function of loading font
+#if FNT_count
+static unsigned loadFont(const char* name){
+    // Openning font file
+    SDL_RWops* fontFile = SDL_RWFromFile(name, "r");
+
+    // Getting file size for creating memory for it
+    fontSize = SDL_RWsize(fontFile);
+    // Checking correction of file
+    if(fontSize == 0){
+        return 0;
+    }
+    fontMemory = (Uint8*)malloc(fontSize);
+    SDL_RWread(fontFile, fontMemory, fontSize, 1);
+    // Closing font file
+    SDL_RWclose(fontFile);
+
+    // Checking correction
+    return FNT_count;
+};
+#endif
+#endif
+
+// Functions of loading all objects from lists
+#if IMG_count
 // Loading all images
 static unsigned loadAllImages(){
     loadedImages = 0;  // Resseting counter
@@ -185,7 +300,9 @@ static unsigned loadAllImages(){
     // Returning numbers of loaded files
     return loadedImages;
 };
+#endif
 
+#if ANI_count
 // Loading all animations
 static unsigned loadAllAnimations(){
     loadedAnimations = 0;  // Resseting counter
@@ -194,60 +311,86 @@ static unsigned loadAllAnimations(){
     // Returning numbers of loaded files
     return loadedAnimations;
 };
+#endif
 
+#if MUS_count
 // Loading all music tracks
 static unsigned loadAllMusic(){
     loadedMusics = 0;  // Resseting counter
-    //loadMusic("mus/.mp3", MUS_);
+    
+    loadMusic("mus/main_theme.mp3", MUS_main);
 
     // Returning numbers of loaded files
     return loadedMusics;
 };
+#endif
 
+#if SND_count
 // Loading all sounds
 static unsigned loadAllSounds(){
     loadedSounds = 0;  // Resseting counter
-    //loadSound("snd/.wav", SND_);
+    
+    loadSound("snd/sfx_hit.wav", SND_hit);
+    loadSound("snd/sfx_point.wav", SND_eat);
 
     // Returning numbers of loaded files
     return loadedSounds;
 };
+#endif
 
+
+// Main data loading function
 void loadData(std::string fileName){
     // Opening archive
+    #if ARCHIEVE_LOADING
     if(openarchive(fileName) == NULL){
         printf("Can't load arcieve");
         exit(ERR_FIL_OPN);
-    }  
+    } 
+    #endif
 
     // Loading data from archive
+    #if ICO_count
     if(loadIcone("img/Game.ico") != ICO_count){
         printf("Can't load game icone");
         exit(ERR_FIL_ICO);
     }
+    #endif
+    #if IMG_count
     if(loadAllImages() != IMG_count){
         printf("Wrong count of images");
         exit(ERR_FIL_IMG);
     }
+    #endif
+    #if ANI_count
     if(loadAllAnimations() != ANI_count){
         printf("Wrong count of animations");
         exit(ERR_FIL_ANI);
     }
+    #endif
+    #if MUS_count
     if(loadAllMusic() != MUS_count){
         printf("Wrong count of music");
         exit(ERR_FIL_MUS);
     }
+    #endif
+    #if SND_count
     if(loadAllSounds() != SND_count){
         printf("Wrong count of sounds");
         exit(ERR_FIL_SND);
     }
+    #endif
+    #if ICO_count
     if(loadFont("fnt/Arial.ttf") != FNT_count){
         printf("Can't load font");
         exit(ERR_FIL_FNT);
     }
+    #endif
 
+    #if ARCHIEVE_LOADING
     // Closing archive
     zip_close(archive);
+    #endif
 }
 
 // Function of clearing all temporary data, loaded from arcieve
@@ -255,22 +398,35 @@ void unloadData(){
     // Unloading data in reverce form from loading
 
     // Deliting font data
+    #if FNT_count
     free(fontMemory);
+    #endif
     // Unloading sound effects
+    #if SND_count
     for(int i=0; i < SND_count; ++i){
         Mix_FreeChunk(Sounds[i]);
     }
-    // Unloading music effects
+    #endif
+    // Unloading music effects and data
+    #if MUS_count
     for(int i=0; i < MUS_count; ++i){
         Mix_FreeMusic(Musics[i]);
+        #if ARCHIEVE_LOADING
+        SDL_RWclose(MusicsData[i]);
+        #endif
     }
+    #endif
     // Unloading gif animations
+    #if ANI_count
     for(int i=0; i < ANI_count; ++i){
         IMG_FreeAnimation(Animations[i]);
     }
+    #endif
     // Unloading images
+    #if IMG_count
     for(int i = 0; i < IMG_count; ++i){
         SDL_DestroyTexture(Textures[i]);
-        Textures[i] = NULL;
+        //Textures[i] = NULL;
     }
+    #endif
 };

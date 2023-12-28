@@ -4,7 +4,7 @@
 void loadInitFile();
 
 // Setting initialased data
-void setInitData();
+//void setInitData();
 
 // Saving initialasing file
 void saveInitFile();

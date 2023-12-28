@@ -12,7 +12,7 @@ void loadInitFile(){
     std::string line;  // Output string line
 
     // Setting standart values for variables
-    language = STANDART_LNG;
+    language = LNG_ENGLISH;
     MusicVolume = MIX_MAX_VOLUME/2;
     EffectsVolume = MIX_MAX_VOLUME/2;
     MaxScore = 0;
@@ -27,16 +27,16 @@ void loadInitFile(){
         if( first == "language" ){
             std::string lang = line.substr(line.rfind('=')+2);
             if(lang == "russian"){
-                language = RUSSIAN_LNG;
+                language = LNG_RUSSIAN;
             }
             else if(lang == "english"){
-                language = ENGLISH_LNG;
+                language = LNG_ENGLISH;
             }
             else if(lang == "russian empire"){
-                language = IMPIRE_LNG;
+                language = LNG_IMPIRE;
             }
             else if(lang == "belarussian"){
-                language = BELARUS_LNG;
+                language = LNG_BELARUS;
             }
         }
         else if( first == "music" ){
@@ -53,41 +53,26 @@ void loadInitFile(){
         }
         else if( first == "width" ){
             gridX = std::stoi( line.substr(line.rfind('=')+2) );
+            // Checking grid for getting over screen
+            if(gridX > 60){
+                gridX = 60;
+            }
         }
         else if( first == "height" ){
             gridY = std::stoi( line.substr(line.rfind('=')+2) );
+            // Checking grid for getting over screen
+            if(gridY > 30){
+                gridY = 30;
+            }
         }
         else if( first == "move time" ){
             moveTime = std::stoi( line.substr(line.rfind('=')+2) );
         }
     }
     //
-    BACK_RECT = {0, UP_MENU, gridX*CELL_SIDE, gridY*CELL_SIDE};  // Base background rect
+    BACK_RECT = {0, UP_MENU, gridX * CELL_SIDE, gridY * CELL_SIDE};  // Base background rect
 
     in.close();  // Closing reading file
-}
-
-void setInitData(){
-    // Initialasing constant start text 
-    switch (language)  // Setting up language
-    {
-    case STANDART_LNG:  // English language
-    case ENGLISH_LNG:
-        setEnglishText();
-        break;
-    case RUSSIAN_LNG:  // Russian language
-        setRussianText();
-        break;
-    case IMPIRE_LNG:  // Russian impire language
-        setImpireText();
-        break;
-    case BELARUS_LNG:  // Bellarussian language
-        setBelarusText();
-        break;
-    }
-    // Setting volumes of sounds
-    Mix_VolumeMusic(MusicVolume);  // Setting volume of music
-    Mix_Volume(-1, EffectsVolume);  // Setting volume of effects
 }
 
 // Saving initialasing file
@@ -97,18 +82,17 @@ void saveInitFile(){
     // Writing data to output
     switch (language)  // Writing language
     {
-    case STANDART_LNG:
-    case ENGLISH_LNG:
+    case LNG_ENGLISH:
     default:
         setting << "language = english" << std::endl;
         break;
-    case RUSSIAN_LNG:
+    case LNG_RUSSIAN:
         setting << "language = russian" << std::endl;
         break;
-    case IMPIRE_LNG:
+    case LNG_IMPIRE:
         setting << "language = russian empire" << std::endl;
         break;
-    case BELARUS_LNG:
+    case LNG_BELARUS:
         setting << "language = belarussian" << std::endl;
         break;
     }

@@ -9,7 +9,7 @@
 // Base entity in-game class
 class Entity{
 protected:
-    Uint8 x, y;
+    coord x, y;
     SDL_Texture *texture;
     SDL_Rect dest;
 public:
@@ -25,7 +25,7 @@ public:
     direction newVec;
     void reset();
     void setVector(SDL_Keycode key);
-    int move();
+    void move();
     void blit();
 };
 

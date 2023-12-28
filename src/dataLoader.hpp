@@ -7,7 +7,7 @@
 // Load file with all data
 void loadData(std::string fileName);
 
-// Function of clearing all temporary data, loaded from arcieve
+// Function of clearing all temporary data, loaded from arcive
 void unloadData();
 
 // Archive values
@@ -46,36 +46,30 @@ enum IMG_names{
     IMG_BODY_STRAIGHT_FAT,
     IMG_BODY_RIGHT_FAT,
     IMG_END_FAT,
-
-    IMG_count // Counter of images
 };
+
+#define IMG_count 22  // Counter of images
 
 // Names of music in array to use
 enum MUS_names{
-    //MUS_main,  // Main in-game song
-    //MUS_menu,  // Menu waiting song
-    
-    MUS_count  // Music counter
+    MUS_main,  // Main in-game song
+    //MUS_menu  // Menu waiting song
 };
+
+#define MUS_count 1  // Music counter
 
 // Names of sound effects in array to use
 enum SND_names{
-    /*SND_laser,  // Sound of shooting
-    SND_bolt,  // Sound of power-up
-    SND_shield,  // Sound of shield adding
-    // Explosions
-    SND_regExplosion,
-    SND_sonicExplosion,*/
-
-    SND_count  // Sounds counter
+    SND_eat,  // Sound of eating
+    SND_hit  // Sound of hitting in wall
 };
+
+#define SND_count 2  // Sounds counter
 
 // Names of animations in array to use
 enum ANI_names{
     /*ANI_menu,  // Menu animation of maxwell cat
-    ANI_adv,  // In game advertisment (of watermellon)*/
-
-    ANI_count  // Animations counter
+    ANI_adv  // In game advertisment (of watermellon)*/
 };
 
-#define SEPARATOR 0
+#define ANI_count 0  // Animations counter
