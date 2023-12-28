@@ -2,13 +2,13 @@
 
 This repository contains sources for standart game "snake" I made based on SDL2 library.
 
-[Gameplay photo](/screenshoots/game.png?raw=true)
+![Photo of the game segment](/screenshoots/game.png?raw=true)
 
 ## Installing
 
 1. Simply download archieve from [releases](https://github.com/kolyaka32/Snake-on-SDL/releases), unzip and run 'snake.exe'!
 2. Also you can download game installer from [releases](https://github.com/kolyaka32/Snake-on-SDL/releases).
-3. Also you can build project by yourself, watch point ['Instalation for own use'](https://github.com/kolyaka32/Snake-on-SDL?tab%253Dreadme-ov-file#installing).
+3. Also you can build project by yourself, watch point 'Instalation for own use'.
 
 ## Usage
 It's standart snake game with main goal to reach maximum length.
