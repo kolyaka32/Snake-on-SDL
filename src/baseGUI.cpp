@@ -9,240 +9,76 @@
 using namespace GUI;
 
 // Function of creating font with need height
-static TTF_Font* createFont(int size){
+static TTF_Font* createFont(Uint8 size){
     SDL_RWops* fontData = SDL_RWFromMem(fontMemory, fontSize);
     return TTF_OpenFontRW(fontData, 1, size);
 };
 
-// Class of static text
-/*void staticText::clear(){
-    SDL_FreeSurface(Surface);
-    SDL_DestroyTexture(Texture);
-    TTF_CloseFont(Font);
+staticText::staticText(char* newText, const Uint8 size, const float x, const float y, const ALIGNMENT_types newAligment, const SDL_Color newColor){
+    Font = createFont(size);
+    text = newText;
+    posX = x;
+    Rect.y = (SCREEN_HEIGHT) * y;
+    aligment = newAligment;
+    color = newColor;
 };
 
-void staticText::set(std::string text, int size, int x, int y, ALIGNMENT_types alignment, SDL_Color color){
-    Font = createFont(size);
-    Surface = TTF_RenderUTF8_Solid(Font, text.std::string::c_str(), color);
+void staticText::updateText(LNG_types language){
+    Uint16 i = 0;
+    for(Uint8 end = 0; (end != language); ++i){
+        if(text[i] == '\0'){
+            end++;
+        }
+    }
+    
+    Surface = TTF_RenderUTF8_Solid(Font, text + i, color);
     Texture = SDL_CreateTextureFromSurface(app.renderer, Surface);
     SDL_QueryTexture(Texture, NULL, NULL, &Rect.w, &Rect.h);
-    Rect.x = x - Rect.w * alignment/2; Rect.y = y;
+    Rect.x = (SCREEN_WIDTH) * posX - (Rect.w * aligment / 2); 
 };
 
-void staticText::draw(){
-    SDL_RenderCopy(app.renderer, Texture, NULL, &Rect);
-};*/
-
-// Static text imported from file
-// Function of using previous command 
-static inline void useCommand(Uint8 type, int* number, int temp){
-    switch (type)
-    {
-    case 1:
-        *number += temp;
-        break;
+void staticText::updateText(LNG_types language, int number){
+    char title[100];
+    Uint8 start = 0;
+    for(Uint8 end = 0; (end != language); ++start){
+        if(text[start] == '\0'){
+            end++;
+        }
+    }
+    Uint8 d = 0;
+    for(int i=start; text[i]; ++i ){
+        if(text[i] == '%'){
+            Uint8 end = 0;
+            int num = number;
+            do{
+                num/=10;
+                end++;
+            } while(num);
+            d += end;
+            do {   
+                title[--d] = '0' + number % 10;
+                number /= 10;
+            } while (number);
+            d += end;
+        }
+        else{
+            title[d++] = text[i];
+        }
+    }
+    title[d] = '\0';
     
-    case 2:
-        *number -= temp;
-        break;
-
-    case 3:
-        *number *= temp;
-        break;
-
-    case 4:
-        *number /= temp;
-        break;
-    }
-    //*temp = 0;
+    Surface = TTF_RenderUTF8_Solid(Font, title, color);
+    Texture = SDL_CreateTextureFromSurface(app.renderer, Surface);
+    SDL_QueryTexture(Texture, NULL, NULL, &Rect.w, &Rect.h);
+    Rect.x = (SCREEN_WIDTH) * posX - (Rect.w * aligment / 2); 
 };
 
-//
-static inline void parseNumber(int* number, const char* data, int* i){
-    //
-    int temp = 0;
-    Uint8 type = 1;
-    for(;data[*i] != ';'; ++(*i)){
-        switch (data[*i])
-        {
-        // Constant numbers
-        case 'W':
-        case 'w':
-            temp = SCREEN_WIDTH;
-            break;
-
-        case 'H':
-        case 'h':
-            temp = SCREEN_HEIGHT;
-            break;
-
-        /*case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-            temp = 0;
-            while(std::isdigit(data[*i++])){
-                temp = temp * 10 + data[*i] - '0';
-            }
-            i--;
-            break;*/
-
-        case '+':
-            useCommand(type, number, temp);
-            type = 1;
-            break;
-
-        case '-':
-            useCommand(type, number, temp);
-            type = 2;
-            break;
-
-        case '*':
-            useCommand(type, number, temp);
-            type = 3;
-            break;
-
-        case '/':
-            useCommand(type, number, temp);
-            type = 4;
-            break;
-        }
-        if(std::isdigit(data[*i])){
-            temp = 0;
-            while(std::isdigit(data[*i++])){
-                temp = temp * 10 + data[*i] - '0';
-            }
-            i--;
-        }
-    }
-    useCommand(type, number, temp);
-}
-
-//
-static inline void parseText(std::string* texts, const char* data, int* i){
-    Uint8 deep = 0;
-    int textCounter = 0;
-    for(; (data[*i] != ';' || deep > 0) && data[*i]; ++(*i)){
-        switch (data[*i])
-        {
-        case '{':
-        case '[':
-            deep++;
-            break;
-
-        case '}':
-        case ']':
-            deep--;
-            break;
-
-        case '"':
-        case '\'':
-            int j=0;
-            while(data[++*i] != '"' || data[*i] != '\'' || data[*i] ){
-                texts[textCounter][j++] = data[*i];
-            }
-            texts[textCounter][j] = '\0';
-            textCounter++;
-            if(textCounter == LNG_count){
-                return;
-            }
-            break;
-        }
-    }
-}
-
-
-fileText::fileText(const char* data){
-    int size = 10;
-    x = 0;
-    int y = 0;
-    aligment = MIDLE_text;
-
-    // Reading all data string for getting all parametres
-    for(int i=0; data[i] && data[i] != '}'; ++i){
-        // Switching between parametres of text
-        switch (data[i])
-        {
-        case 'S':
-        case 's':
-            // Size parameter
-            parseNumber(&size, data, &i);
-            break;
-
-        case 'A':
-        case 'a':
-            // Aligment type (left, midle, right)
-            for(; data[i] && data[i] != ';'; ++i){
-                switch (data[i])
-                {
-                case 'L':
-                case 'l':
-                    aligment = LEFT_text;
-                    break;
-                
-                case 'M':
-                case 'm':
-                    aligment = MIDLE_text;
-                    break;
-
-                case 'R':
-                case 'r':
-                    aligment = RIGHT_text;
-                    break;
-                }
-            }
-            break;
-
-        case 'X':
-        case 'x':
-            // X position
-            parseNumber(&x, data, &i);
-            break;
-
-        case 'Y':
-        case 'y':
-            // Y position
-            parseNumber(&y, data, &i);
-            break;
-
-        case 'T':
-        case 't':
-            // Saving text
-            parseText(texts, data, &i);
-        }
-    }
-
-    // Creating text from get data
-    Font = createFont(size);
-    Dest.y = y;
+void staticText::blit(){
+    SDL_RenderCopy(app.renderer, Texture, NULL, &Rect);
 };
 
-fileText::fileText(int size, int newX, int newY, ALIGNMENT_types newAlignment, SDL_Color color){
-    Font = createFont(size);
-    Dest.y = newY;
-    x = newX;
-    aligment = newAlignment;
-};
-
-void fileText::setTranslate(LNG_types language){
-    SDL_Surface* surface = TTF_RenderUTF8_Solid(Font, texts[language].std::string::c_str(), WHITE);
-    Texture = SDL_CreateTextureFromSurface(app.renderer, surface);
-    SDL_FreeSurface(surface);
-    SDL_QueryTexture(Texture, NULL, NULL, &Dest.w, &Dest.h);
-    Dest.x = x - Dest.w * aligment / 2; 
-};
-
-void fileText::blit(){
-    SDL_RenderCopy(app.renderer, Texture, NULL, &Dest);
-};
-
-void fileText::clear(){
+staticText::~staticText(){
+    SDL_FreeSurface(Surface);
     SDL_DestroyTexture(Texture);
     TTF_CloseFont(Font);
 };
@@ -363,19 +199,3 @@ void Bar::blit( int width ){
     SDL_RenderFillRect(app.renderer, &Front_rect);
     SDL_RenderCopy(app.renderer, IconeTexture, NULL, &IconeRect);  // Rendering icone
 };
-
-void createAllHUD(char* data){
-    char* next = data;
-    //texts = (fileText*)malloc(sizeof(fileText*) * TXT_count);
-
-    realTXT_count = 0;
-    while(((next = strstr(next, "TEXT")) != NULL) && realTXT_count < TXT_count){
-        texts[realTXT_count++] = new fileText(next);
-    }
-};
-
-void freeAllHUD(){
-    for(int i=0; i<realTXT_count; ++i){
-        free(texts[i]);
-    }
-}

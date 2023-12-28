@@ -52,23 +52,19 @@ enum IMG_names{
 
 // Names of music in array to use
 enum MUS_names{
-    //MUS_main,  // Main in-game song
+    MUS_main,  // Main in-game song
     //MUS_menu  // Menu waiting song
 };
 
-#define MUS_count 0  // Music counter
+#define MUS_count 1  // Music counter
 
 // Names of sound effects in array to use
 enum SND_names{
-    /*SND_laser,  // Sound of shooting
-    SND_bolt,  // Sound of power-up
-    SND_shield,  // Sound of shield adding
-    // Explosions
-    SND_regExplosion,
-    SND_sonicExplosion*/
+    SND_eat,  // Sound of eating
+    SND_hit  // Sound of hitting in wall
 };
 
-#define SND_count 0  // Sounds counter
+#define SND_count 2  // Sounds counter
 
 // Names of animations in array to use
 enum ANI_names{

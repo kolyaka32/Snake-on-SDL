@@ -46,7 +46,7 @@ void Head::setVector(SDL_Keycode key){
     }
 };
 
-int Head::move(){
+void Head::move(){
     switch (newVec)
     {
     case UP:
@@ -66,7 +66,8 @@ int Head::move(){
     if(x < 0 || x >= gridX || y < 0 || y >= gridY){
         game_over = true;
         loosing = true;
-        return -1;
+        Mix_PlayChannel(-1, Sounds[SND_hit], 0);
+        return;
     }
     // Detecting collision with snake
     int coord = y*gridX+x;
@@ -74,33 +75,35 @@ int Head::move(){
         if(i != position && coord == TileArray[i].getPos()){
             game_over = true;
             loosing = true;
-            return -2;
+            Mix_PlayChannel(-1, Sounds[SND_hit], 0);
+            return;
         }
     }
     // Detecting collision with apple
     if(getPos() == Apple.getPos()){
-        Apple.FindLocation();  // Getting new location of apple
         length++;
         score += ADD_SCORE;
-        Tile newTile;
-        std::vector<Tile>::const_iterator iter = TileArray.cbegin() + position;
-        TileArray.insert(iter, newTile);
-        TileArray[position].set(dest.x / CELL_SIDE, (dest.y - UP_MENU) / CELL_SIDE, vec, newVec);
-        fat = 1;
-        dest.x = x * CELL_SIDE; 
-        dest.y = y * CELL_SIDE + UP_MENU;
-        vec = newVec;
         if(length >= MAX_LENGTH){
             winning = true;
         }
-        return 2;
+        Tile newTile;
+        std::vector<Tile>::const_iterator iter = TileArray.cbegin() + position;
+        TileArray.insert(iter, newTile);
+        fat = 1;
+        TileArray[position].set(dest.x / CELL_SIDE, (dest.y - UP_MENU) / CELL_SIDE, vec, newVec);
+        // Getting new location of apple
+        Apple.FindLocation();
+        Mix_PlayChannel(-1, Sounds[SND_eat], 0);
     }
-    TileArray[position].set(dest.x / CELL_SIDE, (dest.y - UP_MENU) / CELL_SIDE, vec, newVec);
-    fat = 0;
+    else{
+        fat = 0;
+        TileArray[position].set(dest.x / CELL_SIDE, (dest.y - UP_MENU) / CELL_SIDE, vec, newVec);
+    }
+    
     dest.x = x * CELL_SIDE; 
     dest.y = y * CELL_SIDE + UP_MENU;
-    vec = newVec;
-    return 1;
+    vec = newVec;   
+    return;
 };
 
 void Head::blit(){
@@ -147,21 +150,19 @@ void Fruit::FindLocation(){
         in = false;
         x = rand() % gridX;
         y = rand() % gridY;
-        int Pos = y*gridX+x;
+        int Pos = y * gridX + x;
         for(int i=0; i < length; ++i){
             in = in || (TileArray[i].getPos() == Pos);
         }
         in = in || (Pos == player.getPos());
     }
 
-    dest.x = x*CELL_SIDE;
-    dest.y = y*CELL_SIDE + UP_MENU;
+    dest.x = x * CELL_SIDE;
+    dest.y = y * CELL_SIDE + UP_MENU;
 };
 
 void Fruit::set(){
     FindLocation();
-    //init(x, y, IMG_APPLE);
-    //texture = Textures[newTexture];
 };
 
 void Fruit::setTexture(IMG_names newTexture){

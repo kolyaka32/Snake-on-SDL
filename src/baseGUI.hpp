@@ -14,38 +14,23 @@ namespace GUI{
     };
 
     // Static text on screen with drawing functions
-    /*class staticText
+    class staticText
     {
     private:
         TTF_Font* Font;
         SDL_Surface *Surface;
         SDL_Texture *Texture;
         SDL_Rect Rect;
+        char *text;
+        float posX;
+        ALIGNMENT_types aligment;
+        SDL_Color color;
     public:
-        void set(std::string text, int size, int x, int y, ALIGNMENT_types alignment = MIDLE_text, SDL_Color color = WHITE);
-        void draw();
-        void clear();
-    };*/
-
-    // Static text, importing from file
-    class fileText
-    {
-    private:
-        TTF_Font* Font;
-        SDL_Texture *Texture;
-        SDL_Rect Dest;
-        std::string texts[LNG_count];
-        //char* texts[LNG_count];
-        int x;
-        Uint8 aligment;
-
-    public:
-        fileText(const char* data);
-        fileText(int size, int x, int y, ALIGNMENT_types alignment = MIDLE_text, SDL_Color color = WHITE);
-        //~fileText();
-        void setTranslate(LNG_types language);
+        staticText(char* newText, const Uint8 size, const float newX, const float newY, const ALIGNMENT_types newAlignment = MIDLE_text, const SDL_Color newColor = WHITE);
+        void updateText(LNG_types language);
+        void updateText(LNG_types language, int number);
         void blit();
-        void clear();
+        ~staticText();
     };
 
     // Class of drawing dinamic text at screen
@@ -59,7 +44,7 @@ namespace GUI{
         int X;
     public:
         dinamicText(int size, int x, int y);
-        void draw(std::string text, const ALIGNMENT_types alignment, SDL_Color color = {255, 255, 255});
+        void draw(std::string text, const ALIGNMENT_types alignment, SDL_Color color = BLACK);
         void clear();
     };
 
@@ -116,5 +101,5 @@ namespace GUI{
         void blit( int width );
     };
 
-    void createAllHUD(const char* data);
+    //void createAllHUD(const char* data);
 }

@@ -51,29 +51,32 @@ bool skipping = false;    // Flag of showing skipping text
 // Texts variables and constants
 // All textures
 #if IMG_count
-extern SDL_Texture* Textures[IMG_count];  // Array of all textures
+SDL_Texture* Textures[IMG_count];  // Array of all textures
 #endif
 
 // All animations
 #if ANI_count
-extern IMG_Animation* Animations[ANI_count];  // Array of all animations
+IMG_Animation* Animations[ANI_count];  // Array of all animations
 #endif
 
 // All music trcks
 #if MUS_count
-extern Mix_Music* Musics[MUS_count];      // Array of all music
-extern SDL_RWops* MusicsData[MUS_count];  // Array of data for music
+Mix_Music* Musics[MUS_count];      // Array of all music
+#if ARCHIEVE_LOADING
+SDL_RWops* MusicsData[MUS_count];  // Array of data for music
+#endif
 #endif
 
 // All effects sounds
 #if SND_count
-extern Mix_Chunk* Sounds[SND_count];  // Array of all sound effects
+Mix_Chunk* Sounds[SND_count];  // Array of all sound effects
 #endif
 
 SDL_Rect BACK_RECT;
 
 // Global GUI
-GUI::fileText* texts;  // Global statick texts
+//GUI::fileText* texts;  // Global statick texts
+GUI::staticText* texts[TXT_count];  // Global statick texts
 //Animation Advertisment({0, GAME_HEIGHT, SCREEN_WIDTH, ADV_HIGHT}, ANIM_adv);
 //Animation MenuAdvertisment({96, SCREEN_HEIGHT-192, 288, 192}, ANIM_menu);
 
@@ -89,17 +92,23 @@ int main(int argv, char** args){
     createVideo();  // Creating video output system
     
     // Loading data from file
-    loadData("data.zip");
+    loadData("data.dat");
 
-    setInitData();  // Setting data from init file to program
+    // Setting volumes of sounds
+    Mix_VolumeMusic(MusicVolume);  // Setting volume of music
+    Mix_Volume(-1, EffectsVolume);  // Setting volume of effects
+
+    // Creating user interface
+    setAllText();  // Setting all text
+    updateTranslation(language);  // Updating text
 
     // Interface initialisation
     GUI::dinamicText scoreText(18, SCREEN_WIDTH/2, 10);
     GUI::Button esc(SCREEN_WIDTH - 24, 24, IMG_MENU_PAUSE);
-    /*if(!advertisingMode){
-        Mix_PlayMusic( Musics[MUS_main], -1 );  // Infinite playing music without advertisment
-    }
-    Bar ShieldBar({20, 5, MAX_SHIELD, 10}, {0, 255, 0, 255}, IMG_shield);  // Shield/health bar
+    //if(!advertisingMode){}
+    Mix_PlayMusic( Musics[MUS_main], -1 );  // Infinite playing music without advertisment
+    
+    /*Bar ShieldBar({20, 5, MAX_SHIELD, 10}, {0, 255, 0, 255}, IMG_shield);  // Shield/health bar
     Bar BoostBar({20, 20, 100, 10}, {0, 0, 255, 255}, IMG_bolt);  // Bar of the remaining boost time*/
 
     // Drawing first screen
@@ -204,14 +213,14 @@ int main(int argv, char** args){
         Sint32 DrawSleep = ((SDL_GetTicks64() - oldDrawTime) - 1000/drawFPS);
         SDL_Delay( MAX(MIN( MoveSleep, DrawSleep ), 0) );
 	}
+
     // Exiting program
     // Saving all data to setting file for next start
     saveInitFile();  
     
     // Clearing static texts
-    for(int i=0; i < TXT_count; ++i){
-        texts[i].clear();
-    }
+    clearAllText();
+
     // Clearing dynamic texts
     scoreText.clear();
 

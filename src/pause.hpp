@@ -3,8 +3,13 @@
 #include "baseGUI.hpp"
 #include "structs.hpp"
 
-// Functions for setting text at his place and update it
-void setAllText();
+// Working with text
+// Functions for setting text at his place and his text
+void setAllText();  
+// Function of updating translation of all texts
+void updateTranslation(LNG_types language);
+// Function of clearing text SELCTED_BOX_types
+void clearAllText();
 
 // Pause menu with settings
 void pause();
@@ -29,14 +34,15 @@ enum TXT_types{
     TXT_PAUSE_MUSIC,
     TXT_PAUSE_SOUND
 };
-
 #define TXT_count 11  // Final counter of all texts
 
 // Declaring static text
-extern GUI::fileText* texts;
-//extern GUI::staticText texts[TXT_count];
+extern GUI::staticText* texts[TXT_count];
 
-//extern Animation Advertisment;*/
+// Declaring global list of animations
+#if ANI_count
+extern Animation Advertisment[ANI_count];
+#endif
 
 // External values to save and load from settings file
 extern LNG_types language;  // Language settings

@@ -25,7 +25,7 @@ public:
     direction newVec;
     void reset();
     void setVector(SDL_Keycode key);
-    int move();
+    void move();
     void blit();
 };
 

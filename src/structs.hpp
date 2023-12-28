@@ -33,7 +33,9 @@ extern IMG_Animation* Animations[ANI_count];  // Array of all animations
 // All music trcks
 #if MUS_count
 extern Mix_Music* Musics[MUS_count];      // Array of all music
+#if ARCHIEVE_LOADING
 extern SDL_RWops* MusicsData[MUS_count];  // Array of data for music
+#endif
 #endif
 
 // All effects sounds

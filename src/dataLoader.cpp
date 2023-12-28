@@ -263,7 +263,7 @@ static unsigned loadFont(const char* name){
 #endif
 #endif
 
-// Functions of loading objects from lists
+// Functions of loading all objects from lists
 #if IMG_count
 // Loading all images
 static unsigned loadAllImages(){
@@ -317,7 +317,8 @@ static unsigned loadAllAnimations(){
 // Loading all music tracks
 static unsigned loadAllMusic(){
     loadedMusics = 0;  // Resseting counter
-    //loadMusic("mus/.mp3", MUS_);
+    
+    loadMusic("mus/main_theme.mp3", MUS_main);
 
     // Returning numbers of loaded files
     return loadedMusics;
@@ -328,7 +329,9 @@ static unsigned loadAllMusic(){
 // Loading all sounds
 static unsigned loadAllSounds(){
     loadedSounds = 0;  // Resseting counter
-    //loadSound("snd/.wav", SND_);
+    
+    loadSound("snd/sfx_hit.wav", SND_hit);
+    loadSound("snd/sfx_point.wav", SND_eat);
 
     // Returning numbers of loaded files
     return loadedSounds;
@@ -338,8 +341,8 @@ static unsigned loadAllSounds(){
 
 // Main data loading function
 void loadData(std::string fileName){
-    #if ARCHIEVE_LOADING
     // Opening archive
+    #if ARCHIEVE_LOADING
     if(openarchive(fileName) == NULL){
         printf("Can't load arcieve");
         exit(ERR_FIL_OPN);
@@ -408,7 +411,9 @@ void unloadData(){
     #if MUS_count
     for(int i=0; i < MUS_count; ++i){
         Mix_FreeMusic(Musics[i]);
+        #if ARCHIEVE_LOADING
         SDL_RWclose(MusicsData[i]);
+        #endif
     }
     #endif
     // Unloading gif animations

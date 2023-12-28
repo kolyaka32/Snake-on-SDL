@@ -15,131 +15,122 @@ enum SELCTED_BOX_types{
     BELARUS_BOX
 };
 
+auto tx = {
+    "Snake on SDL!",
+    "Змейка на SDL!",
+    "Змѣйка на SDL!",
+    "ШМУП бульба!"
+};
+
 void setAllText(){
-    /*switch (language)
-    {
-    case LNG_STANDART:
-    case LNG_ENGLISH:
-        texts[TXT_MENU_NAME].set("Snake on SDL!", 64, SCREEN_WIDTH/2, GAME_HEIGHT/5);
-        texts[TXT_MENU_KEYS].set("Arrow or 'WASD' keys move", 22, SCREEN_WIDTH/2, GAME_HEIGHT*2/5);
-        texts[TXT_MENU_REST].set("Press any key to begin", 18, SCREEN_WIDTH/2, GAME_HEIGHT*2/5+70);
+    texts[TXT_MENU_NAME] = new GUI::staticText(
+        "Snake on SDL!\0"
+        "Змейка на SDL!\0"
+        "Змѣйка на SDL!\0"
+        "ШМУП бульба!"
+        , 64, 0.5, 0.2);
+    texts[TXT_MENU_KEYS] = new GUI::staticText(
+        "Arrow or 'WASD' keys move\0"
+        "Стрелочки или 'ЦВЫФ' для передвижения\0"
+        "Стрѣлочки или '​ЦВЫФЪ​' для передвиженія\0"
+        "Клавішы ca стрэлкамі перамяшчаюць к бульбу"
+        , 22, 0.5, 0.3);
+    texts[TXT_MENU_REST] = new GUI::staticText(
+        "Press any key to begin\0"
+        "Нажмите на любую кнопку для начала\0"
+        "Нажмите на любую кнопку для начала\0"
+        "Націсніце любую бульба, каб пачаць бульба"
+        , 18, 0.5, 0.35);
+    texts[TXT_MENU_SCORE] = new GUI::staticText(
+        "Your last score: %\0"
+        "Ваш последний счёт: %\0"
+        "Вашъ послѣдній счетъ: %\0"
+        "Ваш апошні вынік бульба: %"
+        , 20, 0.5, 0.5);
+    texts[TXT_MENU_MAX_SCORE] = new GUI::staticText(
+        "Your max score: %\0"
+        "Ваш максимальный счёт: %\0"
+        "Вашъ максимальный счетъ: %\0"
+        "Ваш максімальны бульба: %"
+        , 20, 0.5, 0.55);
+    texts[TXT_WAIT_WIN] = new GUI::staticText(
+        "You win!\0"
+        "Вы выиграли!\0"
+        "Вы выиграли!\0"
+        "Ты выйграваеш бульба!"
+        , 22, 0.5, 0.4);
+    texts[TXT_WAIT_LOOSE] = new GUI::staticText(
+        "You loose...\0"
+        "Вы проиграли...\0"
+        "Вы проиграли...\0"
+        "Ты прайграў бульбу..."
+        , 22, 0.5, 0.4);
+    texts[TXT_WAIT_SKIP] = new GUI::staticText(
+        "You stop game.\0"
+        "Вы остановили игру.\0"
+        "Вы остановили игру.\0"
+        "Ты спыняеш гульню бульбу"
+        , 22, 0.5, 0.4);
+    texts[TXT_PAUSE_PAUSE] = new GUI::staticText(
+        "Game on pause\0"
+        "Игра на паузе\0"
+        "Игра на паузѣ\0"
+        "Ваша бульба на паўзе"
+        , 30, 0.5, 0.03);
+    texts[TXT_PAUSE_MUSIC] = new GUI::staticText(
+        "Music:\0"
+        "Музыка:\0"
+        "Музыка:\0"
+        "Гучнасць музыкі:"
+        , 22, 0.5, 0.42);
+    texts[TXT_PAUSE_SOUND] = new GUI::staticText(
+        "Sounds:\0"
+        "Звуки:\0"
+        "Звуки:\0"
+        "Гучнасць гукаў:"
+        , 22, 0.5, 0.53);
+}
 
-        texts[TXT_MENU_SCORE].set("Your last score: " + std::to_string(score), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5);
-        texts[TXT_MENU_MAX_SCORE].set("Your max score: " + std::to_string(MaxScore), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5+24);
-
-        texts[TXT_WAIT_WIN].set("You win!", 22, SCREEN_WIDTH/2, GAME_HEIGHT*3/5+110);
-        texts[TXT_WAIT_LOOSE].set("You loose...", 22, SCREEN_WIDTH/2, GAME_HEIGHT*3/5+110);
-        texts[TXT_WAIT_SKIP].set("You stop game.", 22, SCREEN_WIDTH/2, GAME_HEIGHT*3/5+110);
-
-        texts[TXT_PAUSE_PAUSE].set("Game on pause", 30, SCREEN_WIDTH/2, 20);
-        texts[TXT_PAUSE_MUSIC].set("Music:", 22, SCREEN_WIDTH/2, 360);
-        texts[TXT_PAUSE_SOUND].set("Sounds:", 22, SCREEN_WIDTH/2, 460);
-
-        SDL_SetWindowTitle(app.window, "Snake on SDL");
-        break;
-    
-    case LNG_RUSSIAN:
-        texts[TXT_MENU_NAME].set("Змейка на SDL!", 64, SCREEN_WIDTH/2, GAME_HEIGHT/5);
-        texts[TXT_MENU_KEYS].set("Стрелочки или 'ЦВЫФ' для передвижения", 22, SCREEN_WIDTH/2, GAME_HEIGHT*2/5);
-        texts[TXT_MENU_REST].set("Нажмите на любую кнопку для начала", 18, SCREEN_WIDTH/2, GAME_HEIGHT*2/5+70);
-
-        texts[TXT_MENU_SCORE].set("Ваш последний счёт: " + std::to_string(score), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5);
-        texts[TXT_MENU_MAX_SCORE].set("Ваш максимальный счёт: " + std::to_string(MaxScore), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5+24);
-
-        texts[TXT_WAIT_WIN].set("Вы выиграли!", 18, SCREEN_WIDTH/2, GAME_HEIGHT*2/5+110);
-        texts[TXT_WAIT_LOOSE].set("Вы проиграли...", 18, SCREEN_WIDTH/2, GAME_HEIGHT*2/5+110);
-        texts[TXT_WAIT_SKIP].set("Вы остановили игру.", 18, SCREEN_WIDTH/2, GAME_HEIGHT*2/5+110);
-
-        texts[TXT_PAUSE_PAUSE].set("Игра на паузе", 30, SCREEN_WIDTH/2, 20);
-        texts[TXT_PAUSE_MUSIC].set("Музыка:", 22, SCREEN_WIDTH/2, 360);
-        texts[TXT_PAUSE_SOUND].set("Звуки:", 22, SCREEN_WIDTH/2, 460);
-
-        SDL_SetWindowTitle(app.window, "Змейка на SDL");
-        break;
-
-    case LNG_IMPIRE:
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Warning", "Attention, this translation is only a joke and is not intended to offend anyone!", app.window);
-
-        texts[TXT_MENU_NAME].set("Змѣйка на SDL!", 64, SCREEN_WIDTH/2, GAME_HEIGHT/5);
-        texts[TXT_MENU_KEYS].set("Стрѣлочки или '​ЦВЫФЪ​' для передвиженія", 22, SCREEN_WIDTH/2, GAME_HEIGHT*2/5);
-        texts[TXT_MENU_REST].set("Нажмите на любую кнопку для начала", 18, SCREEN_WIDTH/2, GAME_HEIGHT*2/5+70);
-
-        texts[TXT_MENU_SCORE].set("Вашъ послѣдній счетъ: " + std::to_string(score), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5);
-        texts[TXT_MENU_MAX_SCORE].set("Вашъ максимальный счетъ: " + std::to_string(MaxScore), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5+24);
-
-        texts[TXT_WAIT_WIN].set("Вы выиграли!", 18, SCREEN_WIDTH/2, GAME_HEIGHT*2/5+110);
-        texts[TXT_WAIT_LOOSE].set("Вы проиграли...", 18, SCREEN_WIDTH/2, GAME_HEIGHT*2/5+110);
-        texts[TXT_WAIT_SKIP].set("Вы остановили игру.", 18, SCREEN_WIDTH/2, GAME_HEIGHT*2/5+110);
-
-        texts[TXT_PAUSE_PAUSE].set("Игра на паузѣ ", 30, SCREEN_WIDTH/2, 20);
-        texts[TXT_PAUSE_MUSIC].set("Музыка", 22, SCREEN_WIDTH/2, 360);
-        texts[TXT_PAUSE_SOUND].set("Звуки", 22, SCREEN_WIDTH/2, 460);
-
-        SDL_SetWindowTitle(app.window, "Змѣйка на SDL");
-        break;
-
-    case LNG_BELARUS:
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Warning", "Attention, this translation is only a joke and is not intended to offend anyone!", app.window);
-
-        texts[TXT_MENU_NAME].set("ШМУП бульба!", 64, SCREEN_WIDTH/2, GAME_HEIGHT/5);
-        texts[TXT_MENU_KEYS].set("Клавішы ca стрэлкамі перамяшчаюць бульбу, прабел для стральбы па бульбе", 22, SCREEN_WIDTH/2, GAME_HEIGHT*2/5);
-        texts[TXT_MENU_REST].set("Націсніце любую бульба, каб пачаць бульба", 18, SCREEN_WIDTH/2, GAME_HEIGHT*2/5+70);
-
-        texts[TXT_MENU_SCORE].set("Ваш апошні вынік бульба: " + std::to_string(score), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5);
-        texts[TXT_MENU_MAX_SCORE].set("Ваш максімальны бульба: " + std::to_string(MaxScore), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5+24);
-
-        texts[TXT_WAIT_WIN].set("Ты выйграваеш бульба!", 18, SCREEN_WIDTH/2, GAME_HEIGHT*2/5+110);
-        texts[TXT_WAIT_LOOSE].set("Ты прайграў бульбу...", 18, SCREEN_WIDTH/2, GAME_HEIGHT*2/5+110);
-        texts[TXT_WAIT_SKIP].set("Ты спыняеш гульню бульбу", 18, SCREEN_WIDTH/2, GAME_HEIGHT*2/5+110);
-        
-        texts[TXT_PAUSE_PAUSE].set("Ваша бульба на паўзе", 30, SCREEN_WIDTH/2, 20);
-        texts[TXT_PAUSE_MUSIC].set("Гучнасць музыкі", 22, SCREEN_WIDTH/2, 360);
-        texts[TXT_PAUSE_SOUND].set("Гучнасць гукаў", 22, SCREEN_WIDTH/2, 460);
-
-        SDL_SetWindowTitle(app.window, "Сімулятар злову бульбіны на SDL");
-        break;
-    };
-
+void updateTranslation(LNG_types language){
     // Setting fruit skin
     switch (language)
     {
-    case LNG_STANDART:
     case LNG_ENGLISH:
+        SDL_SetWindowTitle(app.window, "Snake on SDL");
+        Apple.setTexture(IMG_APPLE);
+        break;
+
     case LNG_RUSSIAN:
+        SDL_SetWindowTitle(app.window, "Змейка на SDL");
+        Apple.setTexture(IMG_APPLE);
+        break;
+
     case LNG_IMPIRE:
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Warning", "Attention, this translation is only a joke and is not intended to offend anyone!", app.window);
+        SDL_SetWindowTitle(app.window, "Змѣйка на SDL");
         Apple.setTexture(IMG_APPLE);
         break;
 
     case LNG_BELARUS:
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Warning", "Attention, this translation is only a joke and is not intended to offend anyone!", app.window);
+        SDL_SetWindowTitle(app.window, "Сімулятар злову бульбіны на SDL");
         Apple.setTexture(IMG_POTATO);
         break;
-    }*/
+    }
+    
+    // Updating texts
+    for(int i=0; i<TXT_count;++i){
+        texts[i]->updateText(language);
+    }
+    // Updating dinamic texts
+    texts[TXT_MENU_SCORE]->updateText(language, score);
+    texts[TXT_MENU_MAX_SCORE]->updateText(language, MaxScore);
 }
 
-// Setting new numbers of score
-static void setScore(){
-    /*switch (language)
-    {
-    case LNG_STANDART:
-    case LNG_ENGLISH:
-        texts[TXT_MENU_SCORE].set("Your last score: " + std::to_string(score), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5);
-        texts[TXT_MENU_MAX_SCORE].set("Your max score: " + std::to_string(MaxScore), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5+24);
-        break;
-    
-    case LNG_RUSSIAN:
-        texts[TXT_MENU_SCORE].set("Ваш последний счёт: " + std::to_string(score), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5);
-        texts[TXT_MENU_MAX_SCORE].set("Ваш максимальный счёт: " + std::to_string(MaxScore), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5+24);
-        break;
-
-    case LNG_IMPIRE:
-        texts[TXT_MENU_SCORE].set("Вашъ послѣдній счетъ: " + std::to_string(score), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5);
-        texts[TXT_MENU_MAX_SCORE].set("Вашъ максимальный счетъ: " + std::to_string(MaxScore), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5+24);
-        break;
-
-    case LNG_BELARUS:
-        texts[TXT_MENU_SCORE].set("Ваш апошні вынік бульба: " + std::to_string(score), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5);
-        texts[TXT_MENU_MAX_SCORE].set("Ваш максімальны бульба: " + std::to_string(MaxScore), 20, SCREEN_WIDTH/2, GAME_HEIGHT*3/5+24);
-    }*/
+void clearAllText(){
+    for(int i=0; i<TXT_count;++i){
+        delete texts[i];
+    }
 }
 
 // Pause menu
@@ -159,7 +150,7 @@ void pause(){
     bool MouseDown = false;
     char inBox = NORMAL_BOX;
     LNG_types newLanguage = language;
-    //Uint64 prevSND = SDL_GetTicks64();
+    Uint64 prevSND = SDL_GetTicks64();
 
     // Starting loop for waiting for start
     while(waiting && running){  
@@ -174,7 +165,6 @@ void pause(){
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_ESCAPE){
                     waiting = false;  // Returning to game
-                    //return;
                 }
                 break;
 
@@ -194,7 +184,6 @@ void pause(){
         if(MouseDown && inBox == NORMAL_BOX){
             if(esc.in(MouseX, MouseY)){
                 waiting = false;
-                //return;
             }
             if(MusicSlider.in(MouseX, MouseY)){
                 inBox = MUSIC_SLIDER_BOX;
@@ -231,10 +220,10 @@ void pause(){
             Mix_Volume(-1, EffectsVolume);  // Setting volume of effects
             
             // Playing sound effect for understanding loud
-            /*if( SDL_GetTicks64() - prevSND > 200 ){
-                Mix_PlayChannel(-1, Sounds[SND_laser], 0);
+            if( SDL_GetTicks64() - prevSND > 200 ){
+                Mix_PlayChannel(-1, Sounds[SND_eat], 0);
                 prevSND = SDL_GetTicks64();
-            }*/
+            }
             break;
 
         case ENGLISH_BOX:  // If touch english language box
@@ -257,7 +246,7 @@ void pause(){
         // Checking for changing language
         if(newLanguage != language){
             language = newLanguage;
-            setAllText();
+            updateTranslation(language);
         }
 
         // Drawing  
@@ -266,17 +255,17 @@ void pause(){
         SDL_RenderClear(app.renderer);
 
         // Drawing game background
-            for(int y=0; y < gridY; ++y)
-                for(int x=0; x < gridX; ++x){
-                    SDL_Rect dest = {x * CELL_SIDE, y * CELL_SIDE + UP_MENU, CELL_SIDE, CELL_SIDE};
-                    SDL_RenderCopy(app.renderer, Textures[IMG_BACK_LIGHT + (x+y) % 2], NULL, &dest);
-                }
+        for(int y=0; y < gridY; ++y)
+            for(int x=0; x < gridX; ++x){
+                SDL_Rect dest = {x * CELL_SIDE, y * CELL_SIDE + UP_MENU, CELL_SIDE, CELL_SIDE};
+                SDL_RenderCopy(app.renderer, Textures[IMG_BACK_LIGHT + (x+y) % 2], NULL, &dest);
+            }
 
         // Drawing menu
         // Showing extra text
-        texts[TXT_PAUSE_PAUSE].blit();
-        texts[TXT_PAUSE_MUSIC].blit();
-        texts[TXT_PAUSE_SOUND].blit();
+        texts[TXT_PAUSE_PAUSE]->blit();
+        texts[TXT_PAUSE_MUSIC]->blit();
+        texts[TXT_PAUSE_SOUND]->blit();
 
         // Drawing sliders
         MusicSlider.blit(MusicVolume*2);
@@ -306,35 +295,8 @@ void startMenu(){
     if(score > MaxScore){
         MaxScore = score;
     }
-    setScore();
-
-    // Bliting new HUD
-    esc.blit();
-
-    texts[TXT_MENU_NAME].blit();
-    texts[TXT_MENU_KEYS].blit();
-    texts[TXT_MENU_REST].blit();
-    texts[TXT_MENU_SCORE].blit();
-    texts[TXT_MENU_MAX_SCORE].blit();
-
-    // Extra texts of reason of stopping
-    if(winning){
-        texts[TXT_WAIT_WIN].blit();
-    }
-    else if(loosing){
-        texts[TXT_WAIT_LOOSE].blit();
-    }
-    else if(skipping){
-        texts[TXT_WAIT_SKIP].blit();
-    }
-    // Updating screen data
-    SDL_RenderPresent(app.renderer);
-
-    // Getting screenshot
-    SDL_Surface* screenSur = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
-    SDL_RenderReadPixels(app.renderer, NULL, SDL_PIXELFORMAT_ARGB8888, screenSur->pixels, screenSur->pitch);
-    SDL_Texture* screen = SDL_CreateTextureFromSurface(app.renderer, screenSur);
-    SDL_FreeSurface(screenSur);
+    texts[TXT_MENU_SCORE]->updateText(language, score);
+    texts[TXT_MENU_MAX_SCORE]->updateText(language, MaxScore);
 
     // Starting loop for waiting for start
     bool waiting = true;
@@ -347,7 +309,6 @@ void startMenu(){
             case SDL_QUIT:
                 running = false;  // Exit from program
                 waiting = false;
-                //SDL_DestroyTexture(screen);
                 break;
                 //return;
             
@@ -379,20 +340,41 @@ void startMenu(){
                 }
             }
         }
-        // Checking, if stopping process need
-        /*if(!running){
-            SDL_DestroyTexture(screen);
-            return;
-        }
-        if(!waiting) break; */
 
         // Drawing
-        SDL_RenderCopy(app.renderer, screen, NULL, NULL);
+        SDL_RenderClear(app.renderer);
+
+        // Drawing game background
+        for(int y=0; y < gridY; ++y)
+            for(int x=0; x < gridX; ++x){
+                SDL_Rect dest = {x * CELL_SIDE, y * CELL_SIDE + UP_MENU, CELL_SIDE, CELL_SIDE};
+                SDL_RenderCopy(app.renderer, Textures[IMG_BACK_LIGHT + (x+y) % 2], NULL, &dest);
+            }
+
+        // Bliting HUD
+        esc.blit();
+
+        texts[TXT_MENU_NAME]->blit();
+        texts[TXT_MENU_KEYS]->blit();
+        texts[TXT_MENU_REST]->blit();
+        texts[TXT_MENU_SCORE]->blit();
+        texts[TXT_MENU_MAX_SCORE]->blit();
+
+        // Extra texts of reason of stopping
+        if(winning){
+            texts[TXT_WAIT_WIN]->blit();
+        }
+        else if(loosing){
+            texts[TXT_WAIT_LOOSE]->blit();
+        }
+        else if(skipping){
+            texts[TXT_WAIT_SKIP]->blit();
+        }
         SDL_RenderPresent(app.renderer);
 
         SDL_Delay(1000 / drawFPS);  // Extra delaying
     }
-    SDL_DestroyTexture(screen);
+    //SDL_DestroyTexture(screen);
     // Resetting values
     winning = false;
     loosing = false;

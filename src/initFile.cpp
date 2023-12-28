@@ -12,7 +12,7 @@ void loadInitFile(){
     std::string line;  // Output string line
 
     // Setting standart values for variables
-    language = LNG_STANDART;
+    language = LNG_ENGLISH;
     MusicVolume = MIX_MAX_VOLUME/2;
     EffectsVolume = MIX_MAX_VOLUME/2;
     MaxScore = 0;
@@ -70,18 +70,9 @@ void loadInitFile(){
         }
     }
     //
-    BACK_RECT = {0, UP_MENU, gridX*CELL_SIDE, gridY*CELL_SIDE};  // Base background rect
+    BACK_RECT = {0, UP_MENU, gridX * CELL_SIDE, gridY * CELL_SIDE};  // Base background rect
 
     in.close();  // Closing reading file
-}
-
-void setInitData(){
-    // Initialasing constant start text 
-    setAllText();
-
-    // Setting volumes of sounds
-    Mix_VolumeMusic(MusicVolume);  // Setting volume of music
-    Mix_Volume(-1, EffectsVolume);  // Setting volume of effects
 }
 
 // Saving initialasing file
@@ -91,7 +82,6 @@ void saveInitFile(){
     // Writing data to output
     switch (language)  // Writing language
     {
-    case LNG_STANDART:
     case LNG_ENGLISH:
     default:
         setting << "language = english" << std::endl;
