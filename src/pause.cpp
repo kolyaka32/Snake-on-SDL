@@ -15,13 +15,6 @@ enum SELCTED_BOX_types{
     BELARUS_BOX
 };
 
-auto tx = {
-    "Snake on SDL!",
-    "Змейка на SDL!",
-    "Змѣйка на SDL!",
-    "ШМУП бульба!"
-};
-
 void setAllText(){
     texts[TXT_MENU_NAME] = new GUI::staticText(
         "Snake on SDL!\0"
@@ -32,13 +25,13 @@ void setAllText(){
     texts[TXT_MENU_KEYS] = new GUI::staticText(
         "Arrow or 'WASD' keys move\0"
         "Стрелочки или 'ЦВЫФ' для передвижения\0"
-        "Стрѣлочки или '​ЦВЫФЪ​' для передвиженія\0"
+        "Benutzt du Pfeile auf der Tastatur oder 'WASD'\0"
         "Клавішы ca стрэлкамі перамяшчаюць к бульбу"
         , 22, 0.5, 0.3);
     texts[TXT_MENU_REST] = new GUI::staticText(
         "Press any key to begin\0"
         "Нажмите на любую кнопку для начала\0"
-        "Нажмите на любую кнопку для начала\0"
+        "Drückst du beliebige Taste zum Start\0"
         "Націсніце любую бульба, каб пачаць бульба"
         , 18, 0.5, 0.35);
     texts[TXT_MENU_SCORE] = new GUI::staticText(

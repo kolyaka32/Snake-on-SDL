@@ -92,7 +92,7 @@ int main(int argv, char** args){
     createVideo();  // Creating video output system
     
     // Loading data from file
-    loadData("data.dat");
+    loadData("data3.dat");
 
     // Setting volumes of sounds
     Mix_VolumeMusic(MusicVolume);  // Setting volume of music

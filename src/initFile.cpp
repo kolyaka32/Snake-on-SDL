@@ -1,4 +1,5 @@
 #include "include.hpp"
+#include <fstream>
 #include "define.hpp"
 #include "structs.hpp"
 
@@ -8,7 +9,7 @@
 // Loading initialasing settings in game
 void loadInitFile(){
     // Reading file
-    std::ifstream in("settings.ini"); // Open file to read
+    std::ifstream in("settings3.ini"); // Open file to read
     std::string line;  // Output string line
 
     // Setting standart values for variables
@@ -77,7 +78,7 @@ void loadInitFile(){
 
 // Saving initialasing file
 void saveInitFile(){
-    std::ofstream setting("settings.ini");  // Creating output file
+    std::ofstream setting("settings3.ini");  // Creating output file
 
     // Writing data to output
     switch (language)  // Writing language

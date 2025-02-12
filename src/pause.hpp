@@ -37,7 +37,9 @@ enum TXT_types{
 #define TXT_count 11  // Final counter of all texts
 
 // Declaring static text
+#if TXT_count
 extern GUI::staticText* texts[TXT_count];
+#endif
 
 // Declaring global list of animations
 #if ANI_count

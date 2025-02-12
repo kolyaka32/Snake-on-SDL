@@ -15,7 +15,7 @@
 // Window and game base balance options
 #define CELL_SIDE 32  // Width and height of mine
 #define START_WIDTH 5  // Starting width of snake
-#define MAX_LENGTH gridX*gridY-3
+#define MAX_LENGTH gridX * gridY - 3  // Length of snake to win
 #define ADD_SCORE 10
 
 // Base game colors

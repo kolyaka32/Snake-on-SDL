@@ -2,7 +2,7 @@
 
 This repository contains sources for standart game "snake" I made based on SDL2 library.
 
-![Photo of the game segment](/screenshoots/game.png?raw=true)
+![Photo of the game segment](/screenshots/game.png?raw=true)
 
 ## Installing
 

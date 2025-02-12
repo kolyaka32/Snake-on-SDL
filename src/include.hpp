@@ -1,6 +1,5 @@
 #include <string>
 #include <vector>
-#include <fstream>
 
 #include "SDL.h"
 #include "SDL_image.h"
