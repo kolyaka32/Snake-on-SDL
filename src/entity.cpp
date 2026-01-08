@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2024-2026, Kazankov Nikolay
+ * <nik.kazankov.05@mail.ru>
+ */
 
 #include "include.hpp"
 #include "define.hpp"
